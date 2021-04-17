@@ -1,0 +1,20 @@
+:root {
+    --color-primary: #822020;
+    --color-primary-darker: #822020;
+    --color-primary-dark: #884646;
+    --color-input-focus: orange;
+    --color-input-focus-border: yellow;
+}
+
+.nav-wrapper, .nav-wrapper .inner {
+    background: white;
+}
+.nav-search input {
+    background-color: white;
+    border: 1px solid #822020;
+    color: black
+}
+.nav-main a {
+    color: #822020
+}
+
