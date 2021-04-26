@@ -1,14 +1,15 @@
 
-from .base import *
+from __future__ import absolute_import, unicode_literals
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-# SECURITY WARNING: keep the secret key used in production secret!
 import os
 
 env = os.environ.copy()
 SECRET_KEY = env['SECRET_KEY']
+
+from .base import *
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
 
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ['*'] 
