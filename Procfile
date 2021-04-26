@@ -1,0 +1,1 @@
+web: gunicorn TUPFaculty.wsgi --log-file -
