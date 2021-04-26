@@ -1,8 +1,16 @@
-import os
-from django.core.wsgi import get_wsgi_application
-from whitenoise.django import DjangoWhiteNoise
+# """
+# WSGI config for TUPFaculty project.
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "TUPFaculty.settings")
+# It exposes the WSGI callable as a module-level variable named ``application``.
 
-application = get_wsgi_application()
-application = DjangoWhiteNoise(application)
+# For more information on this file, see
+# https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
+# """
+
+# import os
+
+# from django.core.wsgi import get_wsgi_application
+
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "TUPFaculty.settings.dev")
+
+# application = get_wsgi_application()
