@@ -4,6 +4,7 @@ from .base import *
 DEBUG = True
 
 # SECURITY WARNING: keep the secret key used in production secret!
+from __future__ import absolute_import, unicode_literals
 
 import os
 
