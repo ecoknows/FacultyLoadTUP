@@ -11,9 +11,11 @@ module.exports = {
     ]
   },
   theme: {
-    extend: {
-
-    },
+    backgroundColor: theme => ({
+      'white': '#000',
+      'primary': '#822020',
+      'secondary': '#F1F1F1',
+    })
   },
   variants: {},
   plugins: [],

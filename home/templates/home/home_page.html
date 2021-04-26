@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="pt-10 pl-20 pr-10 mx-auto space-y-4" style="max-width: 80rem;">
+        <div class='pl-4'>
+            <h1 class="font-sans text-xl italic font-bold text-gray-700">Welcome, Renagado Fernando</h1>
+            <h2 class="font-sans text-md">Faculty Head</h2>
+        </div>
+        
+        <div class="flex flex-col ">
+            <div class="z-10 pt-4 pl-4 overflow-hidden">
+                <div class="px-4 py-3" style="background-color: white; box-shadow: 0 2px 10px rgb(172, 172, 172); width: fit-content;">
+                    <div class="flex items-center justify-start px-4" style="border: 1px solid rgba(130, 130, 130, 0.439); border-radius: 40px; width: fit-content;"> 
+                        <input class="text-sm w-36 h-7" placeholder="Search Proffesor" style='background-color: transparent'>
+                        <button>    
+                            <img src='{% static "img/home/search.webp" %}'>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="px-4 py-2 ml-4 h-96" style='background-color: white; box-shadow: 0 2px 10px rgb(172, 172, 172); '>
+                <table class="w-full" style="border-spacing:10px; border-collapse: separate; color: #555555;">
+                    <tr class="h-4">
+                        <th class="w-4 px-2 " style="background-color: #E7E7E7">ID</th>
+                        <th class="w-24 px-2 " style="background-color: #E7E7E7">Code</th>
+                        <th class='px-4 text-left' style="background-color: #E7E7E7">Faculty Name</th>
+                    </tr>
+                    {% for faculty in self.query_table %}
+                        <tr>
+                            <td class='text-center'>{{faculty.pk}}</td>
+                            <td class='text-center'>{{faculty.code}}</td>
+                            <td class='px-4 '>{{faculty.faculty_name}}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}

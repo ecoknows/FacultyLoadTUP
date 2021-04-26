@@ -1,0 +1,26 @@
+{% load static %}
+
+<nav class="bg-primary" style="box-shadow: 4px 0 8px 0px rgb(124, 124, 124);">
+    <button class="px-2 py-2" aria-label="Burger Menu" >
+        <img src='{% static "img/home/burger.webp" %}' width='44' alt='Home'>
+    </button>
+    
+    <ul class="py-16 pr-4 space-y-4">
+        <li class="flex space-x-2">
+            <div class="w-2 bg-secondary " style="height: 35px;"></div>
+            <img src='{% static "img/home/home.webp" %}' width='35' alt='Home'>
+        </li>
+        <li class="flex space-x-2">
+            <div class="w-2" style="height: 35px;"></div>
+            <img src='{% static "img/home/clock.webp" %}' width='35' alt='Clock'>
+        </li>
+        <li class="flex space-x-2">
+            <div class="w-2" style="height: 35px;"></div>
+            <img src='{% static "img/home/list.webp" %}' width='35' alt='List'>
+        </li>
+        <li class="flex space-x-2">
+            <div class="w-2" style="height: 35px;"></div>
+            <img src='{% static "img/home/history.webp" %}' width='35' alt='History'>
+        </li>
+    </ul>
+</nav>

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tailwind build tailwind.css cleancss -o ../TUPFaculty/static/css/tailwind.min.css"
+    "build": "tailwind build tailwind.css -o ../TUPFaculty/static/css/tailwind.css && cleancss -o ../TUPFaculty/static/css/tailwind.min.css ../TUPFaculty/static/css/tailwind.css"
   },
   "keywords": [],
   "author": "",
