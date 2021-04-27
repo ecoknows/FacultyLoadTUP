@@ -29,20 +29,18 @@ class Faculty(models.Model):
 
 
 class HomePage(Page):
+    pass
+
+class TupHome(Page):
 
     def query_table(self):
         return Faculty.objects.all()
 
-
-class FacultyLoadPage(Page):
-    faculty_model = Faculty
-
-    def query_table(self):
-        return self.faculty_model.objects.all()
+class FacultyLoad(Page):
+    max_count = 1
+    pass
 
 
-class LoadingPage(Page):
-    faculty_model = Faculty
-
-    def query_table(self):
-        return self.faculty_model.objects.all()
+class LoadingFaculty(Page):
+    max_count = 1
+    pass

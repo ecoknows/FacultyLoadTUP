@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-    <section class="pt-10 pl-20 pr-10 mx-auto space-y-4" style="max-width: 80rem;">
+    <section class="container pt-10 pl-20 pr-10 mx-auto space-y-4">
         <div class='pl-4'>
             <h1 class="font-sans text-xl italic font-bold text-gray-700">Welcome, Renagado Fernando</h1>
             <h2 class="font-sans text-md">Faculty Head</h2>
@@ -28,9 +28,9 @@
                     </tr>
                     {% for faculty in self.query_table %}
                         <tr>
-                            <td class='text-center'>{{faculty.pk}}</td>
-                            <td class='text-center'>{{faculty.code}}</td>
-                            <td class='px-4 '>{{faculty.faculty_name}}</td>
+                            <td class='text-center'><a href="facultyload">{{faculty.pk}}</a></td>
+                            <td class='text-center'><a href="facultyload">{{faculty.code}}</a></td>
+                            <td class='px-4 '><a href='facultyload'>{{faculty.faculty_name}}</a></td>
                         </tr>
                     {% endfor %}
                 </table>
