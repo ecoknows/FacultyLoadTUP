@@ -1,0 +1,39 @@
+{% load static %}
+<style>
+  html {
+    line-height: 1.15; /* 1 */
+    -webkit-text-size-adjust: 100%; /* 2 */
+  }
+
+  body {
+    margin: 0;
+  }
+</style>
+
+<section ">
+  <div
+    style="
+      filter: drop-shadow(0px 7px 5px rgba(0, 0, 0, 0.2));
+      display: flex;
+      justify-content: center;
+    "
+  >
+    <div
+      style="
+        position: absolute;
+        width: 100%;
+        clip-path: ellipse(70% 70% at 50% -30%);
+        background-color: white;
+        height: 100vh;
+      "
+    ></div>
+    <div>
+        
+    </div>
+    <div style="position: absolute; top: 27vh">
+      <img src="{% static 'img/logo.webp' %}" alt="TUP Logo" width="150" />
+    </div>
+    
+  </div>
+
+</section>
