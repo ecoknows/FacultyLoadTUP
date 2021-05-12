@@ -46,10 +46,19 @@
       <form style="display: flex; flex-direction: column; align-items: center;" method="POST" action="{% url 'account_login' %}">
 
         {% csrf_token %}
-        <div style="display: flex; margin-bottom: 20px;">
+        <div style="
+          display: flex;  
+          margin-bottom: 20px; 
+          padding-left: 10px; 
+          padding-right: 10px; 
+          padding-top: 5px;
+          padding-bottom: 5px;
+          background-color: rgb(232, 240, 254);
+          border: 1px solid rgb(128, 128, 128);
+        ">
           <img src='{% static "img/user.png" %}'>
           <input 
-            style="background-color: transparent; margin-left: 10px; border:none; border-bottom: 1px solid black; font-size: 1.3em;" 
+            style="background-color: transparent; margin-left: 10px; border:none; font-size: 1.3em;" 
             placeholder="Email Address"
             name='login' 
             required id='id_login' 
@@ -57,10 +66,19 @@
             type='text'
           />
         </div>
-        <div style="display: flex; margin-bottom: 20px;">
+        <div style="
+          display: flex; 
+          margin-bottom: 20px; 
+          padding-left: 10px; 
+          padding-right: 10px; 
+          padding-top: 5px;
+          padding-bottom: 5px;
+          background-color: rgb(232, 240, 254);
+          border: 1px solid rgb(128, 128, 128);
+          ">
           <img src='{% static "img/password.png" %}'>
           <input 
-            style="margin-left: 10px; border:none; border-bottom: 1px solid black; font-size: 1.3em; background-color: transparent;" 
+            style="margin-left: 10px; border:none; font-size: 1.3em; background-color: transparent;" 
             placeholder="Password"
             name='password' 
             required id='id_password' 
@@ -69,7 +87,14 @@
           />
         </div>
 
-        <button type="submit"  style="color: red" aria-label="Login Button">
+        <button type="submit" aria-label="Login Button" 
+          style="
+            background-color: transparent;
+            border: none;
+            color: black
+          
+          "
+        >
           <h1>Login</h1>
         </button>
       </foorm>
