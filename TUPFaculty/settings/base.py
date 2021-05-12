@@ -115,11 +115,12 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'facultyload',
-        'USER': 'renegado',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': 'project_title_db',
+        # 'NAME': 'facultyload',
+        # 'USER': 'renegado',
+        # 'PASSWORD': 'admin',
+        # 'HOST': 'localhost',
+        # 'PORT': '5432'
     }
 }
 
