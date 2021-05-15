@@ -26,6 +26,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 INSTALLED_APPS = [
     'home',
     'search',
+    'course',
 
     'wagtail.contrib.modeladmin',
     'wagtail.contrib.forms',
@@ -115,12 +116,11 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'project_title_db',
-        # 'NAME': 'facultyload',
-        # 'USER': 'renegado',
-        # 'PASSWORD': 'admin',
-        # 'HOST': 'localhost',
-        # 'PORT': '5432'
+        'NAME': 'facultyload',
+        'USER': 'renegado',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 

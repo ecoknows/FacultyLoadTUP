@@ -17,41 +17,43 @@
   }
 </style>
 
-<section style="background-color: #c2c2c2 ;height: 100vh;">
+<section style="display:flex; : #c2c2c2;height: 100vh;">
   <div style="
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     filter: drop-shadow(0px 7px 5px rgba(0, 0, 0, 0.2)); 
     ">
 
 
     <div
       style="
+        flex: 1;
         clip-path: ellipse(70% 70% at 50% -30%);
         -webkit-clip-path: ellipse(70% 70% at 50% -30%);
         background-color: white;
-        height: 100vh;
         display: flex; 
         justify-content: center;
         align-items: center;
       "
-    >
-
-    </div>
+    ></div>
 
 
-    <div style="position: absolute; top: 0; height: 100vh; width: 100%;">        
-      <div style="height: 75vh; display: flex; justify-content: center; align-items: center;">
+    <div style="position:absolute; top: 0; height: 100%; width: 100%;">        
+
+      <div style="height: 75%; display: flex; justify-content: center; align-items: center;">
         <img src="{% static 'img/logo.webp' %}" alt="TUP Logo" width="250" />
       </div>  
 
-      <form style="display: flex; flex-direction: column; align-items: center;" method="POST" action="{% url 'account_login' %}">
+      <form style="display: flex; flex-direction: column; align-items: center; flex: 1" method="POST" action="{% url 'account_login' %}">
 
         {% csrf_token %}
         <div style="
           display: flex;  
-          margin-bottom: 20px; 
           padding-left: 10px; 
           padding-right: 10px; 
           padding-top: 5px;
+          margin-bottom: 10px;
           padding-bottom: 5px;
           background-color: rgb(232, 240, 254);
           border: 1px solid rgb(128, 128, 128);
@@ -68,7 +70,6 @@
         </div>
         <div style="
           display: flex; 
-          margin-bottom: 20px; 
           padding-left: 10px; 
           padding-right: 10px; 
           padding-top: 5px;
@@ -92,7 +93,6 @@
             background-color: transparent;
             border: none;
             color: black
-          
           "
         >
           <h1>Login</h1>

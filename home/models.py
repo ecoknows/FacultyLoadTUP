@@ -1,11 +1,14 @@
 from django.db import models
+from django import forms
 
 from wagtail.core.models import Page, Orderable
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
-    StreamFieldPanel
+    StreamFieldPanel,
+    ObjectList,
+    TabbedInterface,
 )
 from django import forms
 from wagtail.search import index
@@ -16,46 +19,26 @@ from modelcluster.models import ClusterableModel
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
 from wagtail.snippets.models import register_snippet
-from .blocks import SubjectBlock
+from wagtail.search import index
 
 
-class AdminLoadingFaculty(models.Model):
-
-    professor = models.ForeignKey(
-        "home.Professors",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-
-    subject = StreamField([
-        ('Subject', SubjectBlock()),
-    ], null=True)
-
-    panels = [
-        SnippetChooserPanel("professor"),
-        StreamFieldPanel('subject'),
-    ]
-
-    class Meta:
-        verbose_name = 'Faculty Loading'
-        verbose_name_plural = 'Faculty Loading'
-
-
-@register_snippet
-class Professors(models.Model):
+class Professor(models.Model):
     code = models.CharField(max_length=200, null=True)
     professor_name = models.CharField(max_length=200, null=True)
-    college = models.CharField(max_length=200, null=True)
 
-    panels = [
+    personal_info_panel = [
         MultiFieldPanel([
             FieldPanel('code'),
             FieldPanel('professor_name'),
-            FieldPanel('college'),
         ], heading='Faculty Information')
     ]
+    
+    edit_handler = TabbedInterface(
+        [
+         ObjectList(personal_info_panel, heading="Personal Info"),
+        ]
+    )
+
 
     def __str__(self):
         return self.professor_name
@@ -65,48 +48,97 @@ class Professors(models.Model):
         verbose_name_plural = 'Professors'
 
 
-class Subjects(models.Model):
-    subject_code = models.CharField(max_length=10)
-    description = models.TextField(max_length=250)
+class FacultyLoadModel(models.Model):
+
+    professor = models.ForeignKey(
+        "home.Professor",
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+    
+    schedule = models.ForeignKey(
+        "home.Schedule",
+        null=True,
+        on_delete=models.CASCADE,
+    )
+
+    panels = [
+        SnippetChooserPanel("professor"),
+        SnippetChooserPanel("schedule"),
+    ]
+
+
+    class Meta:
+        verbose_name = 'Faculty Loading'
+        verbose_name_plural = 'Faculty Loading'
+
+class Schedule(models.Model):
+    lec = models.IntegerField(default=0)
+    lab = models.IntegerField(default=0)
+    units = models.IntegerField(default=0)
+
+    subject = models.ForeignKey(
+        'home.Subject',
+        null=True,
+        on_delete=models.CASCADE
+    )
+    
+    room = models.ForeignKey(
+        'home.Room',
+        null=True,
+        on_delete=models.CASCADE
+    )
+    
+    section = models.ForeignKey(
+        'course.Section',
+        null=True,
+        on_delete=models.CASCADE
+    )
+
+    panels = [
+        MultiFieldPanel([
+            SnippetChooserPanel("subject"),
+            SnippetChooserPanel('section'),
+            SnippetChooserPanel('room'),
+        ], 'Assign here'),
+        MultiFieldPanel([
+            FieldPanel('lec'),
+            FieldPanel('lab'),
+            FieldPanel('units'),
+        ], 'Additional info here'),
+    ]
+
+
+@register_snippet
+class Subject(models.Model):
+    subject_code = models.CharField(max_length=50, null=True)
+    description = models.TextField(max_length=150, null=True)
+    course = models.ForeignKey('course.Course', null=True, on_delete=models.CASCADE)
+
+
     panels = [
         MultiFieldPanel([
             FieldPanel('subject_code'),
             FieldPanel('description'),
-        ], heading='Identification'),
+            FieldPanel('course'),
+        ], heading='Requirements for Subject')
     ]
 
+@register_snippet
+class Room(models.Model):
+    name = models.CharField(max_length=50, null=True)
 
-class Sections(models.Model):
-    name = models.CharField(max_length=10, null=True)
-    year_level = models.CharField(max_length=50, default='first-year', null=True, choices=([
-        ('first-year', '1st Year'), ('second-year',
-                                     'Second Year'), ('third-year', '3rd Year')
-    ]))
-
-    panels = [
-        MultiFieldPanel([
-            FieldPanel('name'),
-            FieldPanel('year_level',  widget=forms.RadioSelect),
-        ], heading='Identification'),
-    ]
-
-
-class HomePage(Page):
-
-    def query_table(self):
-        return Professors.objects.all()
+    def __str__(self):
+        return self.name
 
 
 class FacultyLoad(Page):
     pass
 
 
-class LoadingFaculty(Page):
+class FacultyLoading(Page):
+    pass
 
-    def get_context(self, request):
-        context = super().get_context(request)
-        # Filter by tag
-        _pk = request.GET.get('faculty')
-
-        context['data_faculty'] = AdminLoadingFaculty.objects.get(pk=_pk)
-        return context
+class HomePage(Page):
+    pass
