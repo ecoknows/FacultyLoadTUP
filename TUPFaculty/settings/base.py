@@ -155,6 +155,8 @@ USE_I18N = True
 
 USE_L10N = True
 
+# WAGTAIL_TIME_FORMAT = '%I:%M %p'
+
 USE_TZ = True
 
 

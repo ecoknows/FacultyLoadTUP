@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.deletion import SET_NULL
 from wagtail.snippets.models import register_snippet
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -23,8 +24,13 @@ class Section(models.Model, index.Indexed):
         related_name='+'
     )
     
+    search_fields = [
+        index.SearchField('name'),
+        index.SearchField('course'),
+    ]
+    
     def __str__(self):
-        return self.name
+        return '( ' + self.name  + ' ) '+ self.course.name
 
 
 @register_snippet
@@ -69,3 +75,32 @@ class Course(models.Model):
         ordering = [
             'name'
         ]
+
+class College(models.Model):
+    name = models.CharField(max_length=50, null=True)
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'College'
+        verbose_name_plural = 'Colleges'
+        ordering = [
+            'name'
+        ]
+        
+class Department(models.Model):
+    
+    name = models.CharField(max_length=50, null=True)
+    college = models.ForeignKey('course.College',null=True,on_delete=models.SET_NULL)    
+    
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name = 'Department'
+        verbose_name_plural = 'Departments'
+        ordering = [
+            'name'
+        ]
+        
+    

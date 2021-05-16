@@ -13,15 +13,40 @@ from .models import (
     Room,
 )
 from wagtail.core import hooks
+from wagtail.contrib.modeladmin.views import CreateView
+from TUPFaculty import StringResource
+from django.contrib.auth.models import User, Group
+
+class CustomView(CreateView):
+    
+    def form_valid(self, form):
+        instance = form.save()
+        
+        user = User.objects.create_user(
+            username=instance.prof_code(),
+            first_name= instance.first_name,
+            last_name= instance.last_name,
+            password=instance.last_name.upper(),
+            email=instance.first_name + '.' + instance.last_name + '@tup.edu.ph',
+        )
+            
+        
+        group = Group.objects.get(name=self.model_admin.group_name)
+        
+        group.user_set.add(user)
+        
+        return super().form_valid(form)    
 
 class ProfessorAdmin(ModelAdmin):
     model = Professor
+    create_view_class = CustomView
+    group_name = StringResource.PROFESSOR
     menu_label = 'Professor'
     menu_icon = 'group'
     menu_order = 100
-    list_display = ('code', 'professor_name')
-    list_filter = ('college',)
-    search_fields = ('code', 'professor_name')
+    list_display = ('prof_code','prof_name')
+    # list_filter = ('college',)
+    # search_fields = ('code', 'professor_name')
 modeladmin_register(ProfessorAdmin)
 
 
@@ -30,6 +55,7 @@ class FacultyLoadAdmin(ModelAdmin):
     menu_label = 'Faculty Load'
     menu_icon = 'form'
     menu_order = 100
+    list_display = ('professor', 'schedule')
 
 modeladmin_register(FacultyLoadAdmin)
 
@@ -38,6 +64,8 @@ class ScheduleAdmin(ModelAdmin):
     menu_label = 'Schedule'
     menu_icon = 'form'
     menu_order = 100
+    list_display = ('subject', 'section','start_time','ending_time', 'room', 'lab', 'lec', 'units')
+    
 modeladmin_register(ScheduleAdmin)
 
 
@@ -48,10 +76,12 @@ class SubjectAdmin(ModelAdmin):
     menu_order = 100
     list_display = (
         'subject_code',
+        'description',
         'course'
     )
     list_search = (
         'subject_code',
+        'description',
         'course'
     )
     list_filter = ('course',)

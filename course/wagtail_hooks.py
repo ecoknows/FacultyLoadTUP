@@ -3,9 +3,8 @@ from wagtail.contrib.modeladmin.options import (
     ModelAdmin,
     modeladmin_register
 )
-from .models import Course
+from .models import Course, Section, College, Department
 from wagtail.contrib.modeladmin.views import CreateView, EditView
-from .models import Section
 
 from TUPFaculty import StringResource, ALPHABET
 
@@ -103,4 +102,25 @@ class CourseAdmin(ModelAdmin):
     menu_icon = 'form'
     menu_order = 100
     
+    list_display = ('name', 'abbreviation')
+    
 modeladmin_register(CourseAdmin)
+
+
+class CollegeAdmin(ModelAdmin):
+    model = College
+    menu_label = 'College'
+    menu_icon = 'form'
+    menu_order = 100
+    
+modeladmin_register(CollegeAdmin)
+    
+    
+class DepartmentAdmin(ModelAdmin):
+    model = Department
+    menu_label = 'Department'
+    menu_icon = 'form'
+    menu_order = 100
+    
+modeladmin_register(DepartmentAdmin)
+    

@@ -20,28 +20,45 @@ from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
 from wagtail.snippets.models import register_snippet
 from wagtail.search import index
+from TUPFaculty import DAY, TIME
 
+from django.http import HttpResponseRedirect
 
-class Professor(models.Model):
-    code = models.CharField(max_length=200, null=True)
-    professor_name = models.CharField(max_length=200, null=True)
-
-    personal_info_panel = [
-        MultiFieldPanel([
-            FieldPanel('code'),
-            FieldPanel('professor_name'),
-        ], heading='Faculty Information')
-    ]
+@register_snippet
+class Professor(models.Model, index.Indexed):
+    first_name = models.CharField(max_length=50, null=True)
+    middle_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
     
-    edit_handler = TabbedInterface(
-        [
-         ObjectList(personal_info_panel, heading="Personal Info"),
-        ]
+    
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+    
+    department = models.ForeignKey(
+        'course.Department', 
+        null=True, 
+        on_delete=models.SET_NULL
     )
 
+    panels = [
+        MultiFieldPanel([
+            FieldPanel('first_name'),
+            FieldPanel('middle_name'),
+            FieldPanel('last_name'),
+            FieldPanel('department'),
+        ], heading='Faculty Information'),
+    ]
+    
+    def prof_code(self):
+        year = str(self.created_at.year - 2000)
+        college = str(self.department.college.pk + 50)
+        department = str(self.department.pk + 30)
+        return 'TUPM' + '-' + year + '-' + college + department + str(self.pk)
+    def prof_name(self):
+        return 'Prof. ' + self.last_name + ', ' +  self.first_name + ' ' + self.middle_name + '.'
 
     def __str__(self):
-        return self.professor_name
+        return self.prof_name()
 
     class Meta:
         verbose_name = 'Professor'
@@ -72,8 +89,32 @@ class FacultyLoadModel(models.Model):
     class Meta:
         verbose_name = 'Faculty Loading'
         verbose_name_plural = 'Faculty Loading'
-
-class Schedule(models.Model):
+        
+@register_snippet
+class Schedule(models.Model, index.Indexed):
+    
+    
+    day = models.CharField(
+        max_length=20,
+        null=True,
+        choices=DAY,
+        default='Monday'
+    )
+    
+    start_time = models.CharField(
+        max_length=20, 
+        null=True, 
+        choices=TIME,
+        default='7:00 AM'
+    )
+    
+    ending_time = models.CharField(
+        max_length=20, 
+        null=True, 
+        choices=TIME,
+        default='2:00 PM'
+    )
+    
     lec = models.IntegerField(default=0)
     lab = models.IntegerField(default=0)
     units = models.IntegerField(default=0)
@@ -95,8 +136,14 @@ class Schedule(models.Model):
         null=True,
         on_delete=models.CASCADE
     )
+    
 
     panels = [
+        MultiFieldPanel([
+            FieldPanel("day"),
+            FieldPanel('start_time'),
+            FieldPanel('ending_time'),
+        ], 'Set Time'),
         MultiFieldPanel([
             SnippetChooserPanel("subject"),
             SnippetChooserPanel('section'),
@@ -108,10 +155,24 @@ class Schedule(models.Model):
             FieldPanel('units'),
         ], 'Additional info here'),
     ]
-
+    
+    
+    search_fields = [
+        index.SearchField('lec'),
+        index.SearchField('lab'),
+        index.SearchField('units'),
+        index.SearchField('day'),
+        index.SearchField('start_time'),
+        index.SearchField('ending_time'),
+    ]
+    
+    
+    def __str__(self):
+        return self.section.name + '  | ' +  self.subject.description + ' | ' +  str(self.lec) + ' | ' + str(self.lab) + ' | ' + str(self.units) + ' | ' + self.day + ' - ' + str(self.start_time) + ' to ' + str(self.ending_time)
+    
 
 @register_snippet
-class Subject(models.Model):
+class Subject(models.Model, index.Indexed):
     subject_code = models.CharField(max_length=50, null=True)
     description = models.TextField(max_length=150, null=True)
     course = models.ForeignKey('course.Course', null=True, on_delete=models.CASCADE)
@@ -124,9 +185,14 @@ class Subject(models.Model):
             FieldPanel('course'),
         ], heading='Requirements for Subject')
     ]
+    
+    
+    def __str__(self):
+        return '( '+ self.subject_code + ' ) ' + self.description
+
 
 @register_snippet
-class Room(models.Model):
+class Room(models.Model, index.Indexed):
     name = models.CharField(max_length=50, null=True)
 
     def __str__(self):
@@ -141,4 +207,9 @@ class FacultyLoading(Page):
     pass
 
 class HomePage(Page):
-    pass
+    
+    def serve(self, request):
+        if request.user.is_authenticated == False:
+            return HttpResponseRedirect('/login/')
+        return super().serve(request)
+    
