@@ -71,15 +71,15 @@
 <section class="container pt-10 pl-20 pr-10 mx-auto space-y-4">
   <div class="pl-4">
     <h1 class="font-sans text-xl italic font-bold text-gray-700">
-      Welcome, Renagado Fernando
+      Welcome, {{request.user.last_name}}, {{request.user.first_name}}
     </h1>
-    <h2 class="font-sans text-md">Faculty Head sdsa</h2>
+    <h2 class="font-sans text-md">Faculty {{request.user.groups.all.0}}</h2>
   </div>
 
   <div class="flex flex-col">
     <div class="z-10 flex pt-4 pl-4 overflow-hidden">
       <a
-        href="../facultyload/?faculty={{request.GET.faculty}}"
+        href="../facultyload/"
         class="px-4 py-3"
       >
         <h1 class="font-sans text-lg font-bold text-gray-400">Faculty Load</h1>
