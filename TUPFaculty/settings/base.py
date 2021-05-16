@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'home',
     'search',
     'course',
+    'users',
 
     'wagtail.contrib.modeladmin',
     'wagtail.contrib.forms',
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 1
+AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',

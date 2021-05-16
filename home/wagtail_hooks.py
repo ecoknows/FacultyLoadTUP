@@ -15,8 +15,9 @@ from .models import (
 from wagtail.core import hooks
 from wagtail.contrib.modeladmin.views import CreateView
 from TUPFaculty import StringResource
-from django.contrib.auth.models import User, Group
+from users.models import User
 
+from django.contrib.auth.models import Group
 class CustomView(CreateView):
     
     def form_valid(self, form):
@@ -27,6 +28,7 @@ class CustomView(CreateView):
             first_name= instance.first_name,
             last_name= instance.last_name,
             password=instance.last_name.upper(),
+            professor=instance,
             email=instance.first_name + '.' + instance.last_name + '@tup.edu.ph',
         )
             
@@ -44,7 +46,7 @@ class ProfessorAdmin(ModelAdmin):
     menu_label = 'Professor'
     menu_icon = 'group'
     menu_order = 100
-    list_display = ('prof_code','prof_name')
+    list_display = ('prof_code','prof_name', 'time_in', 'time_out')
     # list_filter = ('college',)
     # search_fields = ('code', 'professor_name')
 modeladmin_register(ProfessorAdmin)

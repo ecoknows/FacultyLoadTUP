@@ -23,17 +23,19 @@ from wagtail.search import index
 from TUPFaculty import DAY, TIME
 
 from django.http import HttpResponseRedirect
-from django.contrib.auth.models import User
 
 @register_snippet
 class Professor(models.Model, index.Indexed):
     first_name = models.CharField(max_length=50, null=True)
-    middle_name = models.CharField(max_length=50, null=True)
+    middle_name = models.CharField(max_length=1, null=True)
     last_name = models.CharField(max_length=50, null=True)
     
     
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+    
+    time_in = models.CharField(max_length=50, null=True)
+    time_out = models.CharField(max_length=50, null=True)
     
     department = models.ForeignKey(
         'course.Department', 
@@ -200,6 +202,9 @@ class Room(models.Model, index.Indexed):
         return self.name
 
 
+class TimeLoad(Page):
+    pass
+
 class FacultyLoad(Page):
 
     def get_context(self, request):
@@ -215,7 +220,6 @@ class FacultyLoad(Page):
 
         return context
 
-
 class FacultyLoading(Page):
     pass
 
@@ -229,7 +233,8 @@ class HomePage(Page):
     def serve(self, request):
         if request.user.is_authenticated == False:
             return HttpResponseRedirect('/login/')
-        if str(request.user.groups.all()[0]) == 'Professor':
-                return HttpResponseRedirect('/facultyload/')
+        for group in request.user.groups.all():
+            if str(group) == 'Professor':
+                return HttpResponseRedirect('/faculty-load/')
         return super().serve(request)
     

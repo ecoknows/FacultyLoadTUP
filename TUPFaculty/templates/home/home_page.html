@@ -28,9 +28,9 @@
                     </tr>
                     {% for faculty in query_table %}
                         <tr>
-                            <td class='text-center'><a href="facultyload/?faculty={{faculty.pk}}">{{faculty.pk}}</a></td>
-                            <td class='text-center'><a href="facultyload/?faculty={{faculty.pk}}">{{faculty.prof_code}}</a></td>
-                            <td class='px-4 '><a href='facultyload/?faculty={{faculty.pk}}'>{{faculty.prof_name}}</a></td>
+                            <td class='text-center'><a href="faculty-load/?faculty={{faculty.pk}}">{{faculty.pk}}</a></td>
+                            <td class='text-center'><a href="faculty-load/?faculty={{faculty.pk}}">{{faculty.prof_code}}</a></td>
+                            <td class='px-4 '><a href='faculty-load/?faculty={{faculty.pk}}'>{{faculty.prof_name}}</a></td>
                         </tr>
                     {% endfor %}
                 </table>
