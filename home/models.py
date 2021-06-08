@@ -203,7 +203,12 @@ class Room(models.Model, index.Indexed):
 
 
 class TimeLoad(Page):
-    pass
+    def serve(self, request):
+        if "hatdog" in request.POST:
+            print('das')
+        else:
+            # Display event page as usual
+            return super().serve(request)
 
 class FacultyLoad(Page):
 

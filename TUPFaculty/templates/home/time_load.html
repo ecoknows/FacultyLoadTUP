@@ -1,5 +1,5 @@
 {% extends 'base.html' %} 
-{% load static %} 
+{% load static wagtailcore_tags  %} 
 
 {% block content %}
 
@@ -11,16 +11,28 @@
 	  <h2 class="font-sans text-md">Faculty {{request.user.groups.all.0}}</h2>
 	</div>
   
-	<div class="flex flex-col">
-  
-	  <div
-		class="px-4 py-4 ml-4"
-		style="background-color: white; box-shadow: 0 2px 10px rgb(172, 172, 172); "
-	  >
-		<div class="flex justify-center">
+	<div
+		class="px-4 py-4 ml-4 space-y-2"
+		style="background-color: white; box-shadow: 0 2px 10px rgb(172, 172, 172);"
+	>
+		<div>
 			<time id='time' class="text-4xl font-bold text-center text-gray-600 "></time>
 		</div>
-	  </div>
+
+		<div class="font-bold ">
+			<div class="flex space-x-2 ">
+				<h1 class="text-lg text-gray-600">Status : </h1>
+				<h2 class="text-lg text-green-600"> Time in </h2>
+			</div>
+			<div class="flex space-x-2 ">
+				<h1 class="text-lg text-gray-600">Last Time in : </h1>
+				<h2 class="text-lg "> Sunday March 16, 7:00 PM </h2>
+			</div>
+		</div>
+	
+		<button class=" bg-primary">
+			<h1 class="px-4 text-lg font-bold text-white leading-1 bg-primary" style="padding-top: 2px; padding-bottom: 2px;">TIME OUT</h1>
+		</button>
 	</div>
 </section>
   
