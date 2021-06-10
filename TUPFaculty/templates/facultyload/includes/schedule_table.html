@@ -1,0 +1,73 @@
+
+
+{% load base_tags %}
+
+<div
+class="px-10 py-8 ml-4"
+style="background-color: white; box-shadow: 0 2px 10px rgb(172, 172, 172)"
+>
+    <header class="flex pb-8">
+        <h1 class="flex-1"></h1>
+        <h1 class="flex-1 font-sans text-lg text-center">Monday</h1>
+        <h1 class="flex-1 font-sans text-lg text-center">Tuesday</h1>
+        <h1 class="flex-1 font-sans text-lg text-center">Wednesday</h1>
+        <h1 class="flex-1 font-sans text-lg text-center">Thursday</h1>
+        <h1 class="flex-1 font-sans text-lg text-center">Friday</h1>
+    </header>
+
+    <div class="flex">
+        <h1 class="flex-1 py-4 font-sans text-md">6:00 AM - 7:00 AM</h1>
+        {% identify_schedule 6 7 %}
+    </div>
+
+    <div class="flex">
+        <h1 class="flex-1 py-4 font-sans text-md">7:00 AM - 8:00 AM</h1>
+        {% identify_schedule 7 8 %}
+    </div>
+
+    <div class="flex">
+        <h1 class="flex-1 py-4 font-sans text-md">8:00 AM - 9:00 AM</h1>
+        {% identify_schedule 8 9 %}
+    </div>
+
+    <div class="flex">
+        <h1 class="flex-1 py-4 font-sans text-md">9:00 AM - 10:00 AM</h1>
+        {% identify_schedule 9 10 %}
+    </div>
+
+    <div class="flex">
+        <h1 class="flex-1 py-4 font-sans text-md">10:00 AM - 11:00 AM</h1>
+        {% identify_schedule 10 11 %}
+    </div>
+
+    <div class="flex">
+        <h1 class="flex-1 py-4 font-sans text-md">11:00 AM - 12:00 PM</h1>
+        {% identify_schedule 11 12 %}
+    </div>
+
+    <div class="flex">
+        <h1 class="flex-1 py-4 font-sans text-md">12:00 PM - 1:00 PM</h1>
+        
+        {% identify_schedule 12 13 %}
+    </div>
+
+    <div class="flex">
+        <h1 class="flex-1 py-4 font-sans text-md">1:00 PM - 2:00 PM</h1>
+        {% identify_schedule 13 14 %}
+    </div>
+
+    <div class="flex">
+        <h1 class="flex-1 py-4 font-sans text-md">2:00 PM - 3:00 PM</h1>
+        {% identify_schedule 14 15 %}
+    </div>
+
+    <div class="flex">
+        <h1 class="flex-1 py-4 font-sans text-md">3:00 PM - 4:00 PM</h1>
+        {% identify_schedule 15 16 %}
+    </div>
+
+    <div class="flex">
+        <h1 class="flex-1 py-4 font-sans text-md">4:00 PM - 5:00 PM</h1>
+        {% identify_schedule 16 17 %}
+    </div>
+</div>
