@@ -2,15 +2,6 @@
 {% load static wagtailcore_tags %}
 {% block content %}
 
-<style>
-  input[type=text] {
-    padding: 6px;
-    margin-top: 8px;
-    font-size: 17px;
-    border: 1px solid #570505;
-  }
-</style>
-
 <section class="container pt-10 mx-auto space-y-4">
   <div class="pl-4">
     <h1 class="font-sans text-xl italic font-bold text-gray-700">
@@ -52,7 +43,7 @@
         <h1 class="font-sans text-lg">SY:</h1>
 
         <div style="border: 2px solid #570505; color: #570505;">
-          <select id='year' style="width: 100%;" class="focus:outline-none">
+          <select id='year' style="width: 100%; background-color: white" class="focus:outline-none">
             <option value="2020">2020</option>
             <option value="1999">1999</option>
           </select>
@@ -61,7 +52,7 @@
         <h1 class="font-sans text-lg">Sem:</h1>
 
         <div style="border: 2px solid #570505; color: #570505;">
-          <select id='sem' style="width: 100%;" class="focus:outline-none">
+          <select id='sem' style="width: 100%; background-color: white;" class="focus:outline-none">
             <option value="first">First</option>
             <option value="second">Second</option>
           </select>
@@ -77,19 +68,35 @@
 
       <div class="px-2">
         <div class="mb-2 ">
-          <form>
-            <input type="text" placeholder="Search.." name="search">
-            <button type="submit"><i class="fa fa-search"></i></button>
+          <form id='search-form' class="flex space-x-2" >
+            <div style="
+                    border: 1px solid #570505; 
+                    padding: 6px;
+                    font-size: 17px;
+            ">
+              <input id='search-bar' type="text" placeholder="Search.." name="search" {% if search %}value="{{search}}"{% endif %}>
+            </div>
+            <div class="flex items-center" style="border: 1px solid #570505; color: #570505; ">
+              <button type="submit" class="px-2 text-lg">Search</button>
+            </div>
           </form>
         </div>
-        <h1 class="px-2"><i>*Subject Code / Description / LEC / LAB / UNITS / Schedule </i></h1>
-        <div style="border: 2px solid #570505; color: #570505;" class='flex-1 px-2'>
-          <select id='year' style="width: 100%;" class="focus:outline-none">
-            {% for data in datas %}
-              <option value="2020">{{data.schedule}}</option>
-            {% endfor %}
-          </select>
-        </div>
+        <form method='POST'>
+          {% csrf_token %} 
+          <label class="px-2"><i>*Subject Code / Description / LEC / LAB / UNITS / Schedule </i></label>
+          <div style="border: 2px solid #570505; color: #570505;" class='flex-1 px-2'>
+            <select id='year' name='schedule' style="width: 100%; background-color: white;" class="focus:outline-none">
+              {% for schedule in schedules %}
+                <option value="{{schedule.pk}}">{{schedule}} ( {{schedule.facultyload.all.first.professor}} )</option>
+              {% endfor %}
+            </select>
+  
+          </div>
+  
+          <div>
+            <button type="submit"> Submit </button>
+          </div>
+        </form>
 
       </div>
 
@@ -159,6 +166,8 @@
         },
     })
   })
+
+
 </script>
 
 {% endblock %}

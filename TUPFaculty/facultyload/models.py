@@ -1,12 +1,15 @@
 from django.db import models
+from django.shortcuts import render
+
 
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 from wagtail.core.models import Page
+from django.utils.translation import gettext_lazy as _
 from wagtail.admin.edit_handlers import FieldPanel
 from django.template.response import TemplateResponse
+from django.core.exceptions import ValidationError
 
-
-from TUPFaculty.base.models import Professor
+from TUPFaculty.base.models import Professor, Schedule
 
 
 class FacultyLoadModel(models.Model):
@@ -21,6 +24,7 @@ class FacultyLoadModel(models.Model):
         "base.Schedule",
         null=True,
         on_delete=models.CASCADE,
+        related_name='facultyload'
     )
 
     year = models.IntegerField(
@@ -42,6 +46,11 @@ class FacultyLoadModel(models.Model):
         FieldPanel('year'),
         FieldPanel('semester')
     ]
+    
+    def clean(self):
+        
+        if len(self.schedule.facultyload.all()) > 0:
+            raise ValidationError(_('The schedule are already assigned to that professor'))
 
 
     class Meta:
@@ -100,9 +109,15 @@ class FacultyLoading(Page):
         year = request.GET.get('year', None)
         sem = request.GET.get('sem', None)  
         content = request.GET.get('content', None)
+        submit_schedule = request.POST.get('schedule', None)
         
+        if submit_schedule:
+            FacultyLoadModel.objects.update_or_create(
+                professor=request.user.professor,
+                schedule=Schedule.objects.get(pk=submit_schedule)
+            )
+            
         if content == 'table':
-            print(content   )
             if year and sem:
                 faculty = request.GET.get('faculty', None)
 
@@ -146,6 +161,8 @@ class FacultyLoading(Page):
                         }
                     )
         
+            
+        
         
 
         return super().serve(request)
@@ -153,6 +170,14 @@ class FacultyLoading(Page):
     def get_context(self, request):
         context = super().get_context(request)
         faculty = request.GET.get('faculty')
+        search = request.GET.get('search', None)
+        context['search'] = search
+        if search:
+            context['schedules'] = Schedule.objects.filter(subject__description__icontains=search)
+        else:
+            context['schedules'] = Schedule.objects.all()
+            
+        
         if faculty == None:
             context['professor'] = request.user
             context['datas'] = FacultyLoadModel.objects.filter(
