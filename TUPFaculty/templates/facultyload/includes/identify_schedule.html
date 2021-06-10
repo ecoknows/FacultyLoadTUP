@@ -1,0 +1,12 @@
+{% for time_checker in time_array_checker %}
+    {% if time_checker == 'Not Centered' %}
+        <h1 class="flex-1 font-sans text-md bg-primary"></h1>
+    {% elif time_checker %}
+        <h1 class="flex-1 font-sans text-center text-white text-md bg-primary t">
+            {{time_checker.schedule.section.course.abbreviation}} <br />
+            {{time_checker.schedule.subject.description}}
+        </h1>
+    {% else %}
+        <h1 class="flex-1 font-sans text-md"></h1>
+    {% endif %}
+{% endfor %}

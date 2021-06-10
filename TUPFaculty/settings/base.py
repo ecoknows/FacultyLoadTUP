@@ -24,10 +24,11 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
-    'home',
-    'search',
-    'course',
-    'users',
+    'TUPFaculty.users',
+    'TUPFaculty.base',
+    'TUPFaculty.search',
+    'TUPFaculty.course',
+    'TUPFaculty.facultyload',
 
     'wagtail.contrib.modeladmin',
     'wagtail.contrib.forms',
