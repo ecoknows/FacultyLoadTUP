@@ -1,74 +1,23 @@
 from django.db import models
-from django.shortcuts import render
-
-
-from wagtail.snippets.edit_handlers import SnippetChooserPanel
-from wagtail.core.models import Page
-from django.utils.translation import gettext_lazy as _
-from wagtail.admin.edit_handlers import FieldPanel
 from django.template.response import TemplateResponse
-from django.core.exceptions import ValidationError
 
-from TUPFaculty.base.models import  Schedule, BasePage
+from wagtail.core.models import Page
 
-
-class FacultyLoadModel(models.Model):
-    professor = models.ForeignKey(
-        "users.Professor",
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-    
-    schedule = models.ForeignKey(
-        "base.Schedule",
-        null=True,
-        on_delete=models.CASCADE,
-        related_name='facultyload'
-    )
-
-    year = models.IntegerField(
-        default=2020
-    )
-
-    semester = models.CharField(
-        max_length= 20,
-        choices=[
-            ('first', 'First sem'),
-            ('second', 'Second Sem')
-        ],
-        default='first'
-    )
-    
-    approved = models.BooleanField(default=False)
-    
-
-    panels = [
-        SnippetChooserPanel("professor"),
-        SnippetChooserPanel("schedule"),
-        FieldPanel('year'),
-        FieldPanel('semester')
-    ]
-    
-    def clean(self):
-        
-        if len(self.schedule.facultyload.all()) > 0:
-            raise ValidationError(_('The schedule are already assigned to that professor'))
+from TUPFaculty.base.models import Schedule
+from TUPFaculty.users.models import Professor
+from TUPFaculty.facultyload.models import FacultyLoadModel
 
 
-    class Meta:
-        verbose_name = 'Faculty Loading'
-        verbose_name_plural = 'Faculty Loading'
-
-
-class FacultyLoad(Page):
+class FacultyLoadPage(Page):
     max_count = 1
-
+    parent_page_types = ['DepartmentHeadIndexPage']
+    
     def serve(self, request):
         year = request.GET.get('year', None)
         sem = request.GET.get('sem', None)
         if year and sem:
-            professor = request.user
+            query_professor = request.GET.get('professor', None)
+            professor = Professor.objects.get(pk=query_professor)
 
             data = FacultyLoadModel.objects.filter(
                 professor=professor,
@@ -86,8 +35,12 @@ class FacultyLoad(Page):
         return super().serve(request)
 
     def get_context(self, request):
+        professor = request.GET.get('professor', None)
+    
         context = super().get_context(request)
-        context['professor'] = request.user
+        # context['faculty_loading'] = DepartmentHeadIndexPage.objects.child_of(FacultyLoadingPage).first()
+        context['query_professor'] = professor
+        context['professor'] = Professor.objects.get(pk=professor)
 
         context['datas'] = FacultyLoadModel.objects.filter(
             professor=request.user,
@@ -98,26 +51,28 @@ class FacultyLoad(Page):
 
         return context
 
-class FacultyLoading(Page): 
+
+class FacultyLoadingPage(Page):
     max_count = 1
+    parent_page_types = ['DepartmentHeadIndexPage']
 
     def serve(self, request):
         year = request.GET.get('year', None)
         sem = request.GET.get('sem', None)  
         content = request.GET.get('content', None)
         submit_schedule = request.POST.get('schedule', None)
+        query_professor = request.GET.get('professor', None)
         
         if submit_schedule:
+            professor = Professor.objects.get(pk=query_professor)
             FacultyLoadModel.objects.update_or_create(
-                professor=request.user,
+                professor=professor,
                 schedule=Schedule.objects.get(pk=submit_schedule)
             )
             
         if content == 'table':
             if year and sem:
-
-                professor = request.user
-
+                professor = Professor.objects.get(pk=query_professor)
                 data = FacultyLoadModel.objects.filter(
                     professor=professor,
                     year=int(year),
@@ -133,7 +88,7 @@ class FacultyLoading(Page):
 
         if content == 'schedule':
             if year and sem:
-                professor = request.user
+                professor = Professor.objects.get(pk=query_professor)
 
                 data = FacultyLoadModel.objects.filter(
                     professor=professor,
@@ -153,6 +108,9 @@ class FacultyLoading(Page):
     def get_context(self, request):
         context = super().get_context(request)
         search = request.GET.get('search', None)
+        query_professor = request.GET.get('professor', None)
+        professor = Professor.objects.get(pk=query_professor)
+        
         context['search'] = search
         if search:
             context['schedules'] = Schedule.objects.filter(subject__description__icontains=search)
@@ -160,12 +118,27 @@ class FacultyLoading(Page):
             context['schedules'] = Schedule.objects.all()
 
             
-        context['professor'] = request.user
+        context['professor'] = professor
+        context['query_professor'] = query_professor
         context['datas'] = FacultyLoadModel.objects.filter(
-            professor=request.user,
+            professor=professor,
             year=2020,
             semester='first'
         ).order_by('schedule__section__name')
             
 
         return context
+        
+
+    
+class DepartmentHeadIndexPage(Page):
+    max_count = 1
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['query_table'] = Professor.objects.all().filter(is_superuser=False)
+        context['faculty_load'] = self.get_children().type(FacultyLoadPage).first()
+        return context
+
+    class Meta:
+        verbose_name = 'Department Head Page'

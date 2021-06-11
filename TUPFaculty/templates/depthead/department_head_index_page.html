@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static wagtailcore_tags %}
 
 {% block content %}
     <section class="container pt-10 pl-20 pr-10 mx-auto space-y-4">
@@ -28,9 +28,9 @@
                     </tr>
                     {% for faculty in query_table %}
                         <tr>
-                            <td class='text-center'><a href="faculty-load/?faculty={{faculty.pk}}">{{faculty.pk}}</a></td>
-                            <td class='text-center'><a href="faculty-load/?faculty={{faculty.pk}}">{{faculty.prof_code}}</a></td>
-                            <td class='px-4 '><a href='faculty-load/?faculty={{faculty.pk}}'>{{faculty.prof_name}}</a></td>
+                            <td class='text-center'><a href="{% pageurl faculty_load %}?professor={{faculty.pk}}">{{faculty.pk}}</a></td>
+                            <td class='text-center'><a href="{% pageurl faculty_load %}?professor={{faculty.pk}}">{{faculty.prof_code}}</a></td>
+                            <td class='px-4 '><a href='{% pageurl faculty_load %}?professor={{faculty.pk}}'>{{faculty.prof_name}}</a></td>
                         </tr>
                     {% endfor %}
                 </table>

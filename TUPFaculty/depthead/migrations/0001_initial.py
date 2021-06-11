@@ -14,7 +14,17 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='FacultyLoad',
+            name='DepartmentHeadIndexPage',
+            fields=[
+                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
+            ],
+            options={
+                'verbose_name': 'Department Head Page',
+            },
+            bases=('wagtailcore.page',),
+        ),
+        migrations.CreateModel(
+            name='FacultyLoadingPage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
             ],
@@ -24,7 +34,7 @@ class Migration(migrations.Migration):
             bases=('wagtailcore.page',),
         ),
         migrations.CreateModel(
-            name='FacultyLoading',
+            name='FacultyLoadPage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
             ],
@@ -32,18 +42,5 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
             bases=('wagtailcore.page',),
-        ),
-        migrations.CreateModel(
-            name='FacultyLoadModel',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year', models.IntegerField(default=2020)),
-                ('semester', models.CharField(choices=[('first', 'First sem'), ('second', 'Second Sem')], default='first', max_length=20)),
-                ('approved', models.BooleanField(default=False)),
-            ],
-            options={
-                'verbose_name': 'Faculty Loading',
-                'verbose_name_plural': 'Faculty Loading',
-            },
         ),
     ]

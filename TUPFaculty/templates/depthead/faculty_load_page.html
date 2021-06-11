@@ -1,0 +1,102 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block content %}
+
+<section class="container py-10 mx-auto space-y-4">
+  <div class="pl-4">
+    <h1 class="font-sans text-xl italic font-bold text-gray-700">
+      Welcome, {{request.user.last_name}}, {{request.user.first_name}}
+    </h1>
+    <h2 class="font-sans text-md">Faculty {{request.user.groups.all.0}}</h2>
+  </div>
+
+  <div class="flex flex-col">
+
+    <div class="z-10 flex pt-4 pl-4 overflow-hidden">
+      <div
+        class="px-4 py-3"
+        style="
+          background-color: white;
+          box-shadow: 0 2px 10px rgb(172, 172, 172);
+        "
+      >
+        <div
+          class="flex items-center justify-start px-4"
+        >
+          <h1 class="font-sans text-lg font-bold text-gray-700">
+            Faculty Load
+          </h1>
+        </div>
+      </div>
+
+
+      <a
+        href="../faculty-loading/?professor={{query_professor}}"
+        class="px-4 py-3"
+      >
+        <h1 class="font-sans text-lg font-bold text-gray-400">
+          Faculty Loading
+        </h1>
+      </a>
+    </div>
+
+    <div
+      class="px-4 py-4 ml-4"
+      style="background-color: white; box-shadow: 0 2px 10px rgb(172, 172, 172); "
+    >
+      <div class="flex space-x-2">
+
+        <h1 class="font-sans text-lg">SY:</h1>
+        <div style="border: 2px solid #570505; color: #570505;">
+          <select id='year' style="width: 100%; background-color: white" class="focus:outline-none">
+            <option value="2020">2020</option>
+            <option value="1999">1999</option>
+          </select>
+        </div>
+        <h1 class="font-sans text-lg">Sem:</h1>
+        <div style="border: 2px solid #570505; color: #570505;">
+          <select id='sem' style="width: 100%; background-color: white" class="focus:outline-none">
+            <option value="first">First</option>
+            <option value="second">Second</option>
+          </select>
+        </div>
+      </div>
+      <div class="pl-2 mt-2">
+        <h1 class="font-sans text-3xl font-bold text-gray-600 uppercase">
+          {{professor.last_name}}, {{professor.first_name}}
+        </h1>
+        <h2 class="font-sans text-xl text-gray-600">{{professor}}</h2>
+      </div>
+      <div id='content' class="flex-1 px-4 py-4 text-gray-60" style="overflow-y: auto; max-height: 30rem;">
+        {% load base_tags %}
+        {% for data in datas %}
+          {% ifchanged data.schedule.section.course %}
+            <h1 class="text-xl font-bold text-gray-600">{{data.schedule.section.course}}</h1>
+          {% endifchanged %}
+          
+          {% ifchanged data.schedule.section.year %}
+            <h1 class="ml-4 text-lg font-bold text-gray-600">{{ data.schedule.section.year|to_year_text}}</h1>
+          {% endifchanged %}
+          <h2 class="ml-8 text-lg text-gray-700"> - {{data.schedule}}</h2>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  $('select').change(()=>{
+    $.ajax({
+        type: 'GET',
+        data: {
+          year: $('#year').val(),
+          sem:  $('#sem').val(),
+        },
+        success: function (response) {
+          $('#content').html(response)
+        },
+    })
+  })
+</script>
+{% endblock %}

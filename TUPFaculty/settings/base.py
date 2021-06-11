@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'TUPFaculty.base',
     'TUPFaculty.search',
     'TUPFaculty.course',
+    'TUPFaculty.depthead',
     'TUPFaculty.facultyload',
 
     'wagtail.contrib.modeladmin',
@@ -62,7 +63,7 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 1
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.Professor'
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',

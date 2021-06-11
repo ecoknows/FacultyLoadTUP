@@ -12,11 +12,10 @@ from wagtail.contrib.modeladmin.options import (
 from TUPFaculty.course.models import Course, Section, College, Department
 from TUPFaculty.course.views import CourseCreateView, CourseEditView
 from TUPFaculty import StringResource
-from TUPFaculty.users.models import User
 from TUPFaculty.facultyload.models import FacultyLoadModel
 from TUPFaculty.base.views import ProfessorCreateView
+from TUPFaculty.users.models import Professor
 from TUPFaculty.base.models import (
-    Professor,
     Schedule,
     Subject,
     Room,
@@ -59,7 +58,22 @@ class ProfessorAdmin(ModelAdmin):
     menu_label = 'Professor'
     menu_icon = 'group'
     menu_order = 100
-    list_display = ('prof_code','prof_name', 'time_in', 'time_out')
+    
+    def get_queryset(self, request):
+        """
+        Returns a QuerySet of all model instances that can be edited by the
+        admin site.
+        """
+        qs = self.model._default_manager.get_queryset()
+        ordering = self.get_ordering(request)
+        if ordering:
+            qs = qs.order_by(*ordering)
+        return qs.filter(is_superuser=False)
+
+
+        
+    # list_display = ('prof_code', 'prof_name', 'time_in', 'time_out')
+    # list_filter = ('department_head',)
 modeladmin_register(ProfessorAdmin)
 
 
@@ -68,7 +82,8 @@ class FacultyLoadAdmin(ModelAdmin):
     menu_label = 'Faculty Load'
     menu_icon = 'form'
     menu_order = 100
-    list_display = ('professor', 'schedule')
+    list_display = ('professor', 'schedule','approved')
+    list_filter = ('approved',)
 modeladmin_register(FacultyLoadAdmin)
 
 class ScheduleAdmin(ModelAdmin):

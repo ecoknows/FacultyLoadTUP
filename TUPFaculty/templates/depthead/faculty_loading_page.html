@@ -1,0 +1,173 @@
+{% extends 'base.html' %} 
+{% load static wagtailcore_tags %}
+{% block content %}
+
+<section class="container pt-10 mx-auto space-y-4">
+  <div class="pl-4">
+    <h1 class="font-sans text-xl italic font-bold text-gray-700">
+      Welcome, {{request.user.last_name}}, {{request.user.first_name}}
+    </h1>
+    <h2 class="font-sans text-md">Faculty {{request.user.groups.all.0}}</h2>
+  </div>
+
+  <div class="flex flex-col">
+    <div class="z-10 flex pt-4 pl-4 overflow-hidden">
+      <a
+        href="../faculty-load/?professor={{query_professor}}"
+        class="px-4 py-3"
+      >
+        <h1 class="font-sans text-lg font-bold text-gray-400">Faculty Load</h1>
+      </a>
+
+      <span
+        class="px-4 py-3"
+        style="
+          background-color: white;
+          box-shadow: 0 2px 10px rgb(172, 172, 172);
+        "
+      >
+        <div
+          class="flex items-center justify-start px-4"
+        >
+          <h1 class="font-sans text-lg font-bold text-gray-700">
+            Faculty Loading
+          </h1>
+        </div>
+      </span>
+    </div>
+    <div
+      class="px-4 py-2 ml-4 space-y-4"
+      style="background-color: white; box-shadow: 0 2px 10px rgb(172, 172, 172)"
+    >
+      <div class="flex pl-2 space-x-2">
+        <h1 class="font-sans text-lg">SY:</h1>
+
+        <div style="border: 2px solid #570505; color: #570505;">
+          <select id='year' style="width: 100%; background-color: white" class="focus:outline-none">
+            <option value="2020">2020</option>
+            <option value="1999">1999</option>
+          </select>
+        </div>
+
+        <h1 class="font-sans text-lg">Sem:</h1>
+
+        <div style="border: 2px solid #570505; color: #570505;">
+          <select id='sem' style="width: 100%; background-color: white;" class="focus:outline-none">
+            <option value="first">First</option>
+            <option value="second">Second</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pl-2">
+        <h1 class="font-sans text-3xl font-bold text-gray-600">
+          VIZCONDE, ELANIE
+        </h1>
+        <h2 class="font-sans text-xl text-gray-600">03 - 0195</h2>
+      </div>
+
+      <div class="px-2">
+        <div class="mb-2 ">
+          <form id='search-form' class="flex space-x-2" >
+            <div style="
+                    border: 1px solid #570505; 
+                    padding: 6px;
+                    font-size: 17px;
+            ">
+              <input id='search-bar' type="text" placeholder="Search.." name="search" {% if search %}value="{{search}}"{% endif %}>
+            </div>
+            <div class="flex items-center" style="border: 1px solid #570505; color: #570505; ">
+              <button type="submit" class="px-2 text-lg">Search</button>
+            </div>
+          </form>
+        </div>
+        <form method='POST'>
+          {% csrf_token %} 
+          <label class="px-2"><i>*Subject Code / Description / LEC / LAB / UNITS / Schedule </i></label>
+          <div style="border: 2px solid #570505; color: #570505;" class='flex-1 px-2'>
+            <select id='year' name='schedule' style="width: 100%; background-color: white;" class="focus:outline-none">
+              {% for schedule in schedules %}
+                <option value="{{schedule.pk}}">{{schedule}} ( {{schedule.facultyload.all.first.professor}} )</option>
+              {% endfor %}
+            </select>
+  
+          </div>
+  
+          <div>
+            <button type="submit"> Submit </button>
+          </div>
+        </form>
+
+      </div>
+
+
+      <table
+        class="w-full"
+        style="border-spacing: 10px; border-collapse: separate; color: #555555"
+      >
+        <tr class="h-4 ">
+          <th class="px-2 py-2 text-sm text-left" style="background-color: #e7e7e7">Code</th>
+          <th class="px-4 py-2 text-sm text-left" style="background-color: #e7e7e7">Description</th>
+          <th class="px-4 py-2 text-xs text-left" style="background-color: #e7e7e7">LEC</th>
+          <th class="px-4 py-2 text-xs text-left" style="background-color: #e7e7e7">LAB</th>
+          <th class="px-4 py-2 text-xs text-left" style="background-color: #e7e7e7">UNITS</th>
+          <th class="px-4 py-2 text-sm text-left" style="background-color: #e7e7e7">Sections</th>
+          <th class="px-4 py-2 text-sm text-left" style="background-color: #e7e7e7">Schedule</th>
+        </tr>
+        <tbody id='table'>
+          {% for data in datas %}
+            <tr>
+              <td class="text-sm">{{data.schedule.subject.subject_code}}</td>
+              <td class="text-sm">{{data.schedule.subject.description}}</td>
+              <td class="text-sm">{{data.schedule.lec}}</td>
+              <td class="text-sm">{{data.schedule.lab}}</td>
+              <td class="text-sm">{{data.schedule.units}}</td>
+              <td class="text-sm">{{data.schedule.section}}</td>
+              <td class="text-sm">{{data.schedule}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+
+
+    </div>
+  </div>
+</section>
+
+<section id='schedule' class="container mx-auto mt-16 mb-16 space-y-4">
+  {% include 'facultyload/includes/schedule_table.html' %}
+</section>
+
+
+<script>
+  $('select').change(()=>{
+    $.ajax({
+        type: 'GET',
+        data: {
+          content: 'table',
+          year: $('#year').val(),
+          sem:  $('#sem').val(),
+        },
+        success: function (response) {
+          $('#table').html(response)
+        },
+    })
+    
+    $.ajax({
+        type: 'GET',
+        data: {
+          content: 'schedule',
+          year: $('#year').val(),
+          sem:  $('#sem').val(),
+        },
+        success: function (response) {
+          $('#schedule').html(response)
+        },
+    })
+  })
+
+
+</script>
+
+{% endblock %}
