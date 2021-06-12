@@ -32,7 +32,7 @@ def identify_schedule(context,starting_time,ending_time):
                     if center_time is starting_time:
                         time_array_checker[idx] = day
                     else:
-                        time_array_checker[idx] = 'Not Centered'
+                        time_array_checker[idx] = { 'day' : day, 'stat': 'Not Centered'}
                 
     return {
         'time_array_checker' : time_array_checker,

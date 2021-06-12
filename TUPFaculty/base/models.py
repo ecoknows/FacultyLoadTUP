@@ -131,11 +131,34 @@ class TimeLoad(Page):
     max_count = 1
 
     def serve(self, request):
-        if "hatdog" in request.POST:
-            print('das')
-        else:
-            # Display event page as usual
-            return super().serve(request)
+        time =  request.POST.get('time', None)
+        if time:
+            if request.user.time_in and request.user.time_out:
+                request.user.time_out = None
+                request.user.time_in = time
+                request.user.save()
+            elif request.user.time_in is None:
+                request.user.time_in = time
+                request.user.save()
+            else:
+                request.user.time_out = time
+                request.user.save()
+
+            
+        return super().serve(request)
+
+
+    def get_context(self, request):
+        from TUPFaculty.depthead.models import DepartmentHeadIndexPage
+        context = super().get_context(request)
+        
+        for group in request.user.groups.all():
+            if str(group) == 'Department Head':
+                context['department_head_page'] = DepartmentHeadIndexPage.objects.all().first()
+                
+        return context 
+
+
 
 class BasePage(Page):
     max_count = 1

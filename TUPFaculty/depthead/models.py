@@ -1,5 +1,6 @@
 from django.db import models
 from django.template.response import TemplateResponse
+from django.http import JsonResponse
 
 from wagtail.core.models import Page
 
@@ -62,7 +63,32 @@ class FacultyLoadingPage(Page):
         sem = request.GET.get('sem', None)  
         content = request.GET.get('content', None)
         submit_schedule = request.POST.get('schedule', None)
+        faculty_pk = request.POST.get('faculty_pk', None)
         query_professor = request.GET.get('professor', None)
+        print(faculty_pk, ' sadasdsa')
+        if faculty_pk:
+            if faculty_pk:
+                year = request.POST.get('year', None)
+                sem = request.POST.get('sem', None)  
+                professor = Professor.objects.get(pk=query_professor)
+                faculty_model_to_be_approved = FacultyLoadModel.objects.get(
+                    pk=faculty_pk,
+                )
+                if faculty_model_to_be_approved.approved is False:
+                    faculty_model_to_be_approved.approved = True
+                else :
+                    faculty_model_to_be_approved.approved = False
+
+                faculty_model_to_be_approved.save()
+                
+                data = FacultyLoadModel.objects.filter(
+                    professor=professor,
+                    year=int(year),
+                    semester=sem
+                ).order_by('schedule__section__name')
+
+                return JsonResponse({'is_approve' : faculty_model_to_be_approved.approved})
+
         
         if submit_schedule:
             professor = Professor.objects.get(pk=query_professor)

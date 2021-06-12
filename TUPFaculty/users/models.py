@@ -18,8 +18,8 @@ class Professor(AbstractUser):
     department_head = models.BooleanField(default=False)
     middle_name = models.CharField(max_length=20, null=True)
     
-    time_in = models.CharField(max_length=50, null=True)
-    time_out = models.CharField(max_length=50, null=True)
+    time_in = models.CharField(max_length=50, null=True, blank=True)
+    time_out = models.CharField(max_length=50, null=True, blank=True)
 
     
     department = models.ForeignKey(
@@ -35,6 +35,8 @@ class Professor(AbstractUser):
             FieldPanel('last_name'),
             FieldPanel('department'),
             FieldPanel('department_head'),
+            FieldPanel('time_in'),
+            FieldPanel('time_out'),
         ], heading='Faculty Information'),
     ]
     
@@ -52,11 +54,16 @@ class Professor(AbstractUser):
 
     def save(self, *args, **kwargs):
         if self.is_superuser is False:
-            self.email = self.first_name + '.' + self.last_name + '@tup.edu.ph'
-            self.set_password(self.last_name.upper())
             super().save(*args, **kwargs)
-            self.username=self.prof_code() 
-            
+            old_user = Professor.objects.get(pk=self.pk)
+
+            if old_user.first_name != self.first_name or old_user.last_name != self.last_name:
+                self.email = self.first_name + '.' + self.last_name + '@tup.edu.ph'
+            if old_user.last_name != self.last_name:
+                self.set_password(self.last_name.upper())
+            if old_user.date_joined.year != self.date_joined.year or old_user.department != self.department or old_user.department.college != self.department.college:
+                self.username = self.prof_code()
+                
         super().save(*args, **kwargs)
         
     class Meta:

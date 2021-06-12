@@ -58,6 +58,8 @@ class ProfessorAdmin(ModelAdmin):
     menu_label = 'Professor'
     menu_icon = 'group'
     menu_order = 100
+    list_display = ('prof_code', 'prof_name', 'time_in', 'time_out')
+    list_filter = ('department_head',)
     
     def get_queryset(self, request):
         """
@@ -72,8 +74,6 @@ class ProfessorAdmin(ModelAdmin):
 
 
         
-    # list_display = ('prof_code', 'prof_name', 'time_in', 'time_out')
-    # list_filter = ('department_head',)
 modeladmin_register(ProfessorAdmin)
 
 
