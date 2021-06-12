@@ -41,6 +41,7 @@ class FacultyLoadPage(Page):
         # context['faculty_loading'] = DepartmentHeadIndexPage.objects.child_of(FacultyLoadingPage).first()
         context['query_professor'] = professor
         context['professor'] = Professor.objects.get(pk=professor)
+        context['department_head_page'] = True
 
         context['datas'] = FacultyLoadModel.objects.filter(
             professor=request.user,
@@ -111,6 +112,7 @@ class FacultyLoadingPage(Page):
         query_professor = request.GET.get('professor', None)
         professor = Professor.objects.get(pk=query_professor)
         
+        context['department_head_page'] = True
         context['search'] = search
         if search:
             context['schedules'] = Schedule.objects.filter(subject__description__icontains=search)
@@ -136,8 +138,9 @@ class DepartmentHeadIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
+        context['department_head_page'] = self
         context['query_table'] = Professor.objects.all().filter(is_superuser=False)
-        context['faculty_load'] = self.get_children().type(FacultyLoadPage).first()
+        context['faculty_load'] = self.get_children().live().type(FacultyLoadPage).first()
         return context
 
     class Meta:

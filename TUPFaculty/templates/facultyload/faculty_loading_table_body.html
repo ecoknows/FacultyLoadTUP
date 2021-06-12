@@ -1,6 +1,13 @@
 
 {% for data in datas %}
     <tr>
+        <td class="text-xl text-center">
+            {% if data.approved %}
+            <span class="text-green-700 ">&#10003;</span>
+            {% else %}
+            <span class="text-red-700">&#10005;</span>
+            {% endif %}
+        </td>
         <td class="text-sm">{{data.schedule.subject.subject_code}}</td>
         <td class="text-sm">{{data.schedule.subject.description}}</td>
         <td class="text-sm">{{data.schedule.lec}}</td>

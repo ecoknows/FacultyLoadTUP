@@ -11,13 +11,12 @@ from django.core.exceptions import ValidationError
 
 from TUPFaculty.base.models import  Schedule, BasePage
 
-
 class FacultyLoadModel(models.Model):
     professor = models.ForeignKey(
         "users.Professor",
         null=True,
         on_delete=models.SET_NULL,
-        related_name='+'
+        related_name='+',
     )
     
     schedule = models.ForeignKey(
@@ -86,8 +85,14 @@ class FacultyLoad(Page):
         return super().serve(request)
 
     def get_context(self, request):
+        from TUPFaculty.depthead.models import DepartmentHeadIndexPage
         context = super().get_context(request)
         context['professor'] = request.user
+
+        
+        for group in request.user.groups.all():
+            if str(group) == 'Department Head':
+                context['department_head_page'] = DepartmentHeadIndexPage.objects.all().first()
 
         context['datas'] = FacultyLoadModel.objects.filter(
             professor=request.user,
@@ -151,6 +156,7 @@ class FacultyLoading(Page):
         return super().serve(request)
 
     def get_context(self, request):
+        from TUPFaculty.depthead.models import DepartmentHeadIndexPage
         context = super().get_context(request)
         search = request.GET.get('search', None)
         context['search'] = search
@@ -158,6 +164,10 @@ class FacultyLoading(Page):
             context['schedules'] = Schedule.objects.filter(subject__description__icontains=search)
         else:
             context['schedules'] = Schedule.objects.all()
+
+        for group in request.user.groups.all():
+            if str(group) == 'Department Head':
+                context['department_head_page'] = DepartmentHeadIndexPage.objects.all().first()
 
             
         context['professor'] = request.user

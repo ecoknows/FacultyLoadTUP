@@ -1,6 +1,12 @@
 {% extends 'base.html' %} 
 {% load static %} 
 
+
+{% block side_bard %}
+  {% include 'includes/side-bar.html' with page_menu='faculty_load' %}
+{% endblock %}
+
+
 {% block content %}
 
 <section class="container py-10 mx-auto space-y-4">

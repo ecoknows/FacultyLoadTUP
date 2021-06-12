@@ -1,5 +1,10 @@
 {% extends 'base.html' %} 
 {% load static wagtailcore_tags %}
+
+{% block side_bard %}
+  {% include 'includes/side-bar.html' with page_menu='department_head_page' %}
+{% endblock %}
+
 {% block content %}
 
 <section class="container pt-10 mx-auto space-y-4">
@@ -60,10 +65,10 @@
       </div>
 
       <div class="pl-2">
-        <h1 class="font-sans text-3xl font-bold text-gray-600">
-          VIZCONDE, ELANIE
+        <h1 class="font-sans text-3xl font-bold text-gray-600 uppercase">
+          {{professor.last_name}},  {{professor.first_name}}
         </h1>
-        <h2 class="font-sans text-xl text-gray-600">03 - 0195</h2>
+        <h2 class="font-sans text-xl text-gray-600">{{professor.username}}</h2>
       </div>
 
       <div class="px-2">
@@ -106,6 +111,7 @@
         style="border-spacing: 10px; border-collapse: separate; color: #555555"
       >
         <tr class="h-4 ">
+          <th class="px-2 py-2 text-sm text-left" style="background-color: #e7e7e7">Status</th>
           <th class="px-2 py-2 text-sm text-left" style="background-color: #e7e7e7">Code</th>
           <th class="px-4 py-2 text-sm text-left" style="background-color: #e7e7e7">Description</th>
           <th class="px-4 py-2 text-xs text-left" style="background-color: #e7e7e7">LEC</th>
@@ -117,11 +123,18 @@
         <tbody id='table'>
           {% for data in datas %}
             <tr>
+              <td class="text-xl text-center">
+                {% if data.approved %}
+                <span class="text-green-700 ">&#10003;</span>
+                {% else %}
+                <span class="text-red-700">&#10005;</span>
+                {% endif %}
+              </td>
               <td class="text-sm">{{data.schedule.subject.subject_code}}</td>
               <td class="text-sm">{{data.schedule.subject.description}}</td>
-              <td class="text-sm">{{data.schedule.lec}}</td>
-              <td class="text-sm">{{data.schedule.lab}}</td>
-              <td class="text-sm">{{data.schedule.units}}</td>
+              <td class="text-sm text-center">{{data.schedule.lec}}</td>
+              <td class="text-sm text-center">{{data.schedule.lab}}</td>
+              <td class="text-sm text-center">{{data.schedule.units}}</td>
               <td class="text-sm">{{data.schedule.section}}</td>
               <td class="text-sm">{{data.schedule}}</td>
             </tr>

@@ -30,7 +30,9 @@
         {% wagtailuserbar %}
         
         <section class="flex flex-row h-screen bg-secondary">
-            {% include 'includes/side-bar.html' %}
+            {% block side_bard %}
+            {% endblock %}
+
             
             <div class="flex flex-col flex-1 w-full ">
                 {% include 'includes/header.html' %}

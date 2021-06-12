@@ -7,19 +7,21 @@
     
     <ul class="py-16 pr-4 space-y-4">
         <li class="flex space-x-2">
-            <div class="w-2 bg-secondary " style="height: 35px;"></div>
-            <a href="/faculty-load">
+            <div class="w-2 {% if page_menu == 'faculty_load' %}bg-secondary{% endif %}" style="height: 35px;"></div>
+            <a href="/">
                 <img src='{% static "img/home/home.webp" %}' width='35' alt='Home'>
             </a>
         </li>
+        {% if department_head_page  %}
         <li class="flex space-x-2">
-            <div class="w-2" style="height: 35px;"></div>
-            <a href="/department-head-index-page" aria-label="List">
+            <div class="w-2 {% if page_menu == 'department_head_page' %}bg-secondary {% endif %}" style="height: 35px;"></div>
+            <a href="{{department_head_page.url}}" aria-label="List">
                 <img src='{% static "img/home/list.webp" %}' width='35' alt='List'>
             </a>
         </li>
+        {% endif %}
         <li class="flex space-x-2">
-            <div class="w-2" style="height: 35px;"></div>
+            <div class="w-2 {% if page_menu == 'history' %}bg-secondary {% endif %}" style="height: 35px;"></div>
             <a href="#" aria-label="History">
                 <img src='{% static "img/home/history.webp" %}' width='35' alt='History'>
             </a>

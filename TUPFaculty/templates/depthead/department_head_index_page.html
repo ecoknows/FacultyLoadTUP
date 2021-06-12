@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static wagtailcore_tags %}
 
+{% block side_bard %}
+  {% include 'includes/side-bar.html' with page_menu='department_head_page' %}
+{% endblock %}
+
 {% block content %}
     <section class="container pt-10 pl-20 pr-10 mx-auto space-y-4">
         <div class='pl-4'>

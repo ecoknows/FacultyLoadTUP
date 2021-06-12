@@ -148,9 +148,9 @@ class BasePage(Page):
             return HttpResponseRedirect('/login/')
         for group in request.user.groups.all():
             if str(group) == 'Department Head':
-                return HttpResponseRedirect(self.get_children().type(FacultyLoad).first().url)
+                return HttpResponseRedirect(self.get_children().live().type(FacultyLoad).first().url)
             if str(group) == 'Professor':
-                return HttpResponseRedirect(self.get_children().type(FacultyLoad).first().url)
+                return HttpResponseRedirect(self.get_children().live().type(FacultyLoad).first().url)
 
         return HttpResponseRedirect('/logout')
     
