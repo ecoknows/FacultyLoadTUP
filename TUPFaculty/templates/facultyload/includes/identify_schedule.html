@@ -1,8 +1,8 @@
 {% for time_checker in time_array_checker %}
-    {% if time_checker == 'Not Centered' %}
-        <h1 class="flex-1 font-sans text-md bg-primary"></h1>
+    {% if time_checker.stat == 'Not Centered' %}
+        <h1 class="flex-1 font-sans text-md bg-primary" {% if time_checker.day.approved is False %}style="background-color: gray;"{% endif %}></h1>
     {% elif time_checker %}
-        <h1 class="flex-1 font-sans text-center text-white text-md bg-primary t">
+        <h1 class="flex-1 font-sans text-center text-white text-md bg-primary" {% if time_checker.approved is False %}style="background-color: gray;" {% endif %}>
             {{time_checker.schedule.section.course.abbreviation}} <br />
             {{time_checker.schedule.subject.description}}
         </h1>

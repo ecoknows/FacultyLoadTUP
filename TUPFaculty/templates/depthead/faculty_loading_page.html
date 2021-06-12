@@ -97,10 +97,11 @@
             </select>
   
           </div>
-  
-          <div>
-            <button type="submit"> Submit </button>
+
+          <div class="py-2">
+              <button class="px-4 text-white bg-primary" style="padding-top: 4px; padding-bottom: 4px;"  type="submit"> Submit </button>
           </div>
+          
         </form>
 
       </div>
@@ -111,7 +112,7 @@
         style="border-spacing: 10px; border-collapse: separate; color: #555555"
       >
         <tr class="h-4 ">
-          <th class="px-2 py-2 text-sm text-left" style="background-color: #e7e7e7">Status</th>
+          <th class="w-24 text-sm text-center" style="background-color: #e7e7e7">Status</th>
           <th class="px-2 py-2 text-sm text-left" style="background-color: #e7e7e7">Code</th>
           <th class="px-4 py-2 text-sm text-left" style="background-color: #e7e7e7">Description</th>
           <th class="px-4 py-2 text-xs text-left" style="background-color: #e7e7e7">LEC</th>
@@ -120,26 +121,38 @@
           <th class="px-4 py-2 text-sm text-left" style="background-color: #e7e7e7">Sections</th>
           <th class="px-4 py-2 text-sm text-left" style="background-color: #e7e7e7">Schedule</th>
         </tr>
-        <tbody id='table'>
-          {% for data in datas %}
-            <tr>
-              <td class="text-xl text-center">
-                {% if data.approved %}
-                <span class="text-green-700 ">&#10003;</span>
-                {% else %}
-                <span class="text-red-700">&#10005;</span>
-                {% endif %}
-              </td>
-              <td class="text-sm">{{data.schedule.subject.subject_code}}</td>
-              <td class="text-sm">{{data.schedule.subject.description}}</td>
-              <td class="text-sm text-center">{{data.schedule.lec}}</td>
-              <td class="text-sm text-center">{{data.schedule.lab}}</td>
-              <td class="text-sm text-center">{{data.schedule.units}}</td>
-              <td class="text-sm">{{data.schedule.section}}</td>
-              <td class="text-sm">{{data.schedule}}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
+
+          <tbody  id='table' > 
+              {% for data in datas %}
+              <tr >
+                <td class="text-xl text-center">
+                  {% if data.approved %}
+                  <form  method='post' class="flex justify-center check" onmouseover='crossHover(this,true);' onmouseout="crossHover(this,false);">
+                    
+                    <span class="text-green-700">&#10003;</span>
+                    {% csrf_token %}
+                    <button  value='{{data.pk}}' type="button" onmousedown="form_submit(this);" class="text-xs text-center text-green-700 uppercase " style="display: none;">Approved</button>
+                  </form>
+                  {% else %}
+                  <form method='post' class="flex justify-center" onmouseover='crossHover(this,true);' onmouseout="crossHover(this,false);">
+                    
+                    <span class="text-red-700">&#10005;</span>
+                    {% csrf_token %} 
+                    <button value='{{data.pk}}' type="button" onmousedown="form_submit(this);" class="text-xs text-center text-red-700 uppercase " style="display: none;">Waiting for approval</button>
+                  </form>
+                  {% endif %}
+                </td>
+                <td class="text-sm">{{data.schedule.subject.subject_code}}</td>
+                <td class="text-sm">{{data.schedule.subject.description}}</td>
+                <td class="text-sm text-center">{{data.schedule.lec}}</td>
+                <td class="text-sm text-center">{{data.schedule.lab}}</td>
+                <td class="text-sm text-center">{{data.schedule.units}}</td>
+                <td class="text-sm">{{data.schedule.section}}</td>
+                <td class="text-sm">{{data.schedule}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          
       </table>
 
 
@@ -154,6 +167,49 @@
 
 
 <script>
+  function crossHover(element, status){
+    if(status){
+      $(element).find('span').css('display', 'none');
+      $(element).find('button').css('display', 'block');
+    }else{
+      $(element).find('span').css('display', 'block');
+      $(element).find('button').css('display', 'none');
+    }
+  }
+
+  function form_submit(button){
+    $.ajax({
+        type: 'POST',
+        data: {
+          faculty_pk: $(button).val(),
+          year: $('#year').val(),
+          sem:  $('#sem').val(),
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function (response) {
+          console.log(response.is_approve);
+          if( response.is_approve){
+            $(button).html('Approved');
+            $(button).removeClass('text-red-700');
+            $(button).addClass('text-green-700 ');
+            $(button).parent().find('span').removeClass();
+            $(button).parent().find('span').toggleClass('text-green-700')
+            $(button).parent().find('span').html('&#10003;');
+          }else{
+            $(button).html('Waiting for approval');
+            $(button).removeClass('text-green-700');
+            $(button).addClass('text-red-700 ');
+            $(button).parent().find('span').removeClass();
+            $(button).parent().find('span').addClass('text-red-700')
+            $(button).parent().find('span').html('&#10005;');
+          }
+        },
+    })
+  }
+
+  
+
+
   $('select').change(()=>{
     $.ajax({
         type: 'GET',

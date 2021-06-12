@@ -12,6 +12,7 @@ module.exports = {
   },
   theme: {
     backgroundColor: theme => ({
+      ...theme,
       'white': '#000',
       'primary': '#822020',
       'secondary': '#F1F1F1',
