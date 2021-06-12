@@ -9,7 +9,7 @@ def to_year_text(value):
         'Second Year',
         'Third Year',
         'Fourth Year',
-    ]
+    ]   
     return year[value-1]
 
 
@@ -27,7 +27,7 @@ def identify_schedule(context,starting_time,ending_time):
             if DAY[idx][0] == day.schedule.day:
                 if day.schedule.start_time <= starting_time:
                     center_time = int(((day.schedule.ending_time - day.schedule.start_time) / 2) + day.schedule.start_time)
-                    if ((day.schedule.ending_time - day.schedule.start_time) % 2) is 0:
+                    if ((day.schedule.ending_time - day.schedule.start_time) % 2) == 0:
                         center_time = center_time - 1
                     if center_time is starting_time:
                         time_array_checker[idx] = day

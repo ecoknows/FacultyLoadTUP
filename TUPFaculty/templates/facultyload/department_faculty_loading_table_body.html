@@ -1,0 +1,26 @@
+{% for data in datas %}
+    <tr >
+        <td class="text-xl text-center" style="height: 2.5rem;">
+            {% if data.approved %}
+            <form id='form-table'  method='post' class="flex justify-center check" onmouseover='crossHover(this,true);' onmouseout="crossHover(this,false);">
+            <span class="text-green-700">&#10003;</span>
+            {% csrf_token %}
+            <button id='prof_approved' value='disapprove' type="button" onmousedown="form_submit();" class="text-xs text-center text-green-700 uppercase " style="display: none;">Approved</button>
+            </form>
+            {% else %}
+            <form id='form-table' method='post' class="flex justify-center" onmouseover='crossHover(this,true);' onmouseout="crossHover(this,false);">
+            {% csrf_token %} 
+            <span class="text-red-700">&#10005;</span>
+            <button id='prof_approved'  value='approve' type="button" onmousedown="form_submit();" class="text-xs text-center text-red-700 uppercase " style="display: none;">Waiting for approval</button>
+            </form>
+            {% endif %}
+        </td>
+        <td class="text-sm">{{data.schedule.subject.subject_code}}</td>
+        <td class="text-sm">{{data.schedule.subject.description}}</td>
+        <td class="text-sm text-center">{{data.schedule.lec}}</td>
+        <td class="text-sm text-center">{{data.schedule.lab}}</td>
+        <td class="text-sm text-center">{{data.schedule.units}}</td>
+        <td class="text-sm">{{data.schedule.section}}</td>
+        <td class="text-sm">{{data.schedule}}</td>
+    </tr>
+{% endfor %}

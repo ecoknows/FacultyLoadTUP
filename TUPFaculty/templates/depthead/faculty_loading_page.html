@@ -92,7 +92,7 @@
           <div style="border: 2px solid #570505; color: #570505;" class='flex-1 px-2'>
             <select id='year' name='schedule' style="width: 100%; background-color: white;" class="focus:outline-none">
               {% for schedule in schedules %}
-                <option value="{{schedule.pk}}">{{schedule}} ( {{schedule.facultyload.all.first.professor}} )</option>
+                <option  {% if schedule.facultyload.all.first.professor %}disabled{% endif %}  value="{{schedule.pk}}">{{schedule}} ( {{schedule.facultyload.all.first.professor}} )</option>
               {% endfor %}
             </select>
   
@@ -124,12 +124,12 @@
 
           <tbody  id='table' > 
               {% for data in datas %}
-              <tr >
-                <td class="text-xl text-center">
+              <tr>
+                <td class="text-xl text-center" style="height: 2.5rem;">
                   {% if data.approved %}
                   <form  method='post' class="flex justify-center check" onmouseover='crossHover(this,true);' onmouseout="crossHover(this,false);">
                     
-                    <span class="text-green-700">&#10003;</span>
+                    <span class="text-green-700 ">&#10003;</span>
                     {% csrf_token %}
                     <button  value='{{data.pk}}' type="button" onmousedown="form_submit(this);" class="text-xs text-center text-green-700 uppercase " style="display: none;">Approved</button>
                   </form>
@@ -187,7 +187,7 @@
           csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function (response) {
-          console.log(response.is_approve);
+          
           if( response.is_approve){
             $(button).html('Approved');
             $(button).removeClass('text-red-700');
@@ -195,6 +195,18 @@
             $(button).parent().find('span').removeClass();
             $(button).parent().find('span').toggleClass('text-green-700')
             $(button).parent().find('span').html('&#10003;');
+
+            $.ajax({
+                type: 'GET',
+                data: {
+                  content: 'schedule',
+                  year: $('#year').val(),
+                  sem:  $('#sem').val(),
+                },
+                success: function (response) {
+                  $('#schedule').html(response)
+                },
+            })
           }else{
             $(button).html('Waiting for approval');
             $(button).removeClass('text-green-700');
@@ -202,6 +214,18 @@
             $(button).parent().find('span').removeClass();
             $(button).parent().find('span').addClass('text-red-700')
             $(button).parent().find('span').html('&#10005;');
+
+            $.ajax({
+                type: 'GET',
+                data: {
+                  content: 'schedule',
+                  year: $('#year').val(),
+                  sem:  $('#sem').val(),
+                },
+                success: function (response) {
+                  $('#schedule').html(response)
+                },
+            })
           }
         },
     })

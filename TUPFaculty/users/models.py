@@ -47,10 +47,7 @@ class Professor(AbstractUser):
         return 'TUPM' + '-' + year + '-' + college + department + str(self.pk)
 
     def prof_name(self):
-        return 'Prof. ' + self.last_name  + ', '  + self.first_name +' ' +self.middle_name + '.'
-
-    # def __str__(self):
-    #     return self.prof_name()
+        return 'Prof. ' + self.last_name  + ', '  + self.first_name +' ' +self.middle_name[0]+ '.'
 
     def save(self, *args, **kwargs):
         if self.is_superuser is False:

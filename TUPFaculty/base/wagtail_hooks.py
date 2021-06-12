@@ -6,6 +6,7 @@ from wagtail.core import hooks
 from wagtail.contrib.modeladmin.views import CreateView
 from wagtail.contrib.modeladmin.options import (
     ModelAdmin,
+    ModelAdminGroup,
     modeladmin_register
 )
 
@@ -18,46 +19,16 @@ from TUPFaculty.users.models import Professor
 from TUPFaculty.base.models import (
     Schedule,
     Subject,
-    Room,
+    Room
 )
-
-
-class CourseAdmin(ModelAdmin):
-    create_view_class = CourseCreateView
-    edit_view_class = CourseEditView
-    model = Course
-    menu_label = 'Course'
-    menu_icon = 'form'
-    menu_order = 100
-    
-    list_display = ('name', 'abbreviation')
-modeladmin_register(CourseAdmin)
-
-
-class CollegeAdmin(ModelAdmin):
-    model = College
-    menu_label = 'College'
-    menu_icon = 'form'
-    menu_order = 100
-modeladmin_register(CollegeAdmin)
-    
-    
-class DepartmentAdmin(ModelAdmin):
-    model = Department
-    menu_label = 'Department'
-    menu_icon = 'form'
-    menu_order = 100
-modeladmin_register(DepartmentAdmin)
-
   
-
+  
 class ProfessorAdmin(ModelAdmin):
     model = Professor
     create_view_class = ProfessorCreateView
     group_name = StringResource.PROFESSOR
     menu_label = 'Professor'
     menu_icon = 'group'
-    menu_order = 100
     list_display = ('prof_code', 'prof_name', 'time_in', 'time_out')
     list_filter = ('department_head',)
     
@@ -71,9 +42,6 @@ class ProfessorAdmin(ModelAdmin):
         if ordering:
             qs = qs.order_by(*ordering)
         return qs.filter(is_superuser=False)
-
-
-        
 modeladmin_register(ProfessorAdmin)
 
 
@@ -81,7 +49,6 @@ class FacultyLoadAdmin(ModelAdmin):
     model = FacultyLoadModel
     menu_label = 'Faculty Load'
     menu_icon = 'form'
-    menu_order = 100
     list_display = ('professor', 'schedule','approved')
     list_filter = ('approved',)
 modeladmin_register(FacultyLoadAdmin)
@@ -90,7 +57,6 @@ class ScheduleAdmin(ModelAdmin):
     model = Schedule
     menu_label = 'Schedule'
     menu_icon = 'form'
-    menu_order = 100
     list_display = ('subject', 'section','start_time','ending_time', 'room', 'lab', 'lec', 'units')
 modeladmin_register(ScheduleAdmin)
 
@@ -111,15 +77,48 @@ class SubjectAdmin(ModelAdmin):
         'course'
     )
     list_filter = ('course',)
-modeladmin_register(SubjectAdmin)
-
+    
+    
 class RoomAdmin(ModelAdmin):
     model = Room
     menu_label = 'Room'
     menu_icon = 'form'
-    menu_order = 100
-modeladmin_register(RoomAdmin)
 
+
+class CourseAdmin(ModelAdmin):
+    create_view_class = CourseCreateView
+    edit_view_class = CourseEditView
+    model = Course
+    menu_label = 'Course'
+    menu_icon = 'form'
+    
+    list_display = ('name', 'abbreviation')
+
+class CollegeAdmin(ModelAdmin):
+    model = College
+    menu_label = 'College'
+    menu_icon = 'form'
+    
+    
+class DepartmentAdmin(ModelAdmin):
+    model = Department
+    menu_label = 'Department'
+    menu_icon = 'form'
+    menu_order = 100
+
+class DataGroup(ModelAdminGroup):
+    menu_label = 'Data'
+    menu_icon = 'folder-open-inverse'  # change as required
+    menu_order = 200  # will put in 3rd place (000 being 1st, 100 2nd)
+    items = (
+        CourseAdmin, 
+        CollegeAdmin, 
+        DepartmentAdmin,
+        SubjectAdmin,
+        RoomAdmin
+    )
+
+modeladmin_register(DataGroup)
 
 
 @hooks.register("insert_global_admin_css")

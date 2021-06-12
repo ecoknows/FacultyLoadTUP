@@ -15,12 +15,12 @@
         <div class="flex flex-col ">
             <div class="z-10 pt-4 pl-4 overflow-hidden">
                 <div class="px-4 py-3" style="background-color: white; box-shadow: 0 2px 10px rgb(172, 172, 172); width: 15rem;">
-                    <div class="flex items-center justify-start w-full px-4" style="border: 1px solid rgba(130, 130, 130, 0.439); border-radius: 40px;"> 
-                        <input class="w-full text-sm h-7" placeholder="Search Proffesor" style='background-color: transparent'>
-                        <button>    
+                    <form method='get' class="flex items-center justify-start w-full px-4" style="border: 1px solid rgba(130, 130, 130, 0.439); border-radius: 40px;"> 
+                        <input name='search_query' value='{{search_query}}' class="w-full text-sm h-7" placeholder="Search Proffesor" style='background-color: transparent'>
+                        <button type="submit">    
                             <img src='{% static "img/home/search.webp" %}'>
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
             <div class="px-4 py-2 ml-4 h-96" style='background-color: white; box-shadow: 0 2px 10px rgb(172, 172, 172); '>

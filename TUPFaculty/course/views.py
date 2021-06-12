@@ -6,10 +6,10 @@ from TUPFaculty import StringResource, ALPHABET
 
 class CourseCreateView(CreateView):
 
-    def create_section(self, instance,section_cnt, str_year):
+    def create_section(self, instance,section_cnt, str_year, extra=''):
         for x in range(section_cnt):
             Section.objects.create(
-                name=instance.abbreviation + '-' + str_year + ALPHABET[x] ,
+                name=instance.abbreviation + '-' + str_year + ALPHABET[x] + extra,
                 course=instance,
                 year=int(str_year)
         )
@@ -39,6 +39,37 @@ class CourseCreateView(CreateView):
             section_cnt=instance.fourth_year_section,
             str_year='4'
         )
+        
+        ## NON STEM
+        
+        self.create_section(
+            instance=instance,
+            section_cnt=instance.first_year_section_non_stem,
+            str_year='1',
+            extra='-NS'
+        )
+        
+        self.create_section(
+            instance=instance,
+            section_cnt=instance.second_year_section_non_stem,
+            str_year='2',
+            extra='-NS'
+        )
+        
+        self.create_section(
+            instance=instance,
+            section_cnt=instance.third_year_section_non_stem,
+            str_year='3',
+            extra='-NS'
+        )
+        
+        self.create_section(
+            instance=instance,
+            section_cnt=instance.fourth_year_section_non_stem,
+            str_year='4',
+            extra='-NS'
+        )
+
 
         return super().form_valid(form)
         
@@ -47,7 +78,8 @@ class CourseEditView(EditView):
         self,
         course,
         section_cnt,
-        str_year
+        str_year,
+        extra='',
     ):
         filtered_section = Section.objects.filter(course=course, year=int(str_year))
         current_section_length = len(filtered_section)
@@ -59,7 +91,7 @@ class CourseEditView(EditView):
             for x in range(updated_section_length):
                 Section.objects.create(
                     year=int(str_year),
-                    name=course.abbreviation + '-' + str_year + ALPHABET[x],
+                    name=course.abbreviation + '-' + str_year + ALPHABET[x] + extra,
                     course=course
             )
 
@@ -87,6 +119,35 @@ class CourseEditView(EditView):
             section_cnt=instance.fourth_year_section,
             str_year='4'
         )
+        
+        
+        ## NON STEM
+        
+        
+        self.edit_section(
+            course=instance,
+            section_cnt=instance.first_year_section_non_stem,
+            str_year='1',
+            extra='-NS'
+        )
+        self.edit_section(
+            course=instance,
+            section_cnt=instance.second_year_section_non_stem,
+            str_year='2',
+            extra='-NS'
+        )
+        self.edit_section(
+            course=instance,
+            section_cnt=instance.third_year_section_non_stem,
+            str_year='3',
+            extra='-NS'
+        )
+        self.edit_section(
+            course=instance,
+            section_cnt=instance.fourth_year_section_non_stem,
+            str_year='4',
+            extra='-NS'
+        )
+        
 
-        print(instance.pk, self.model)
         return super().form_valid(form)   

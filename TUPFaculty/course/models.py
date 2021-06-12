@@ -20,7 +20,7 @@ class Section(models.Model, index.Indexed):
     course = models.ForeignKey(
         'course.Course',
         null=True, 
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='+'
     )
     
@@ -42,21 +42,35 @@ class Course(models.Model):
     second_year_section = models.IntegerField(default=0, verbose_name='2nd Year')
     third_year_section = models.IntegerField(default=0, verbose_name='3rdYear')
     fourth_year_section = models.IntegerField(default=0, verbose_name='4th Year')
+    
+    
+    first_year_section_non_stem = models.IntegerField(default=0, verbose_name='1st Year')
+    second_year_section_non_stem = models.IntegerField(default=0, verbose_name='2nd Year')
+    third_year_section_non_stem = models.IntegerField(default=0, verbose_name='3rdYear')
+    fourth_year_section_non_stem = models.IntegerField(default=0, verbose_name='4th Year')
+
 
     description_panel = [
         MultiFieldPanel([
             FieldPanel('name'),
             FieldPanel('abbreviation'),
-        ], heading='Course Name')
+        ], heading='How many Sections')
     ]
 
     section_panel = [
         MultiFieldPanel([
-            FieldPanel('first_year_section', help_text='how many section'),
-            FieldPanel('second_year_section', help_text='how many section'),
-            FieldPanel('third_year_section', help_text='how many section'),
-            FieldPanel('fourth_year_section',help_text='how many section'),
-        ], heading='Course Sections')
+            FieldPanel('first_year_section'),
+            FieldPanel('second_year_section'),
+            FieldPanel('third_year_section'),
+            FieldPanel('fourth_year_section'),
+        ], heading='Course Sections'),
+        
+        MultiFieldPanel([
+            FieldPanel('first_year_section_non_stem'),
+            FieldPanel('second_year_section_non_stem'),
+            FieldPanel('third_year_section_non_stem'),
+            FieldPanel('fourth_year_section_non_stem',help_text='how many section'),
+        ], heading='How many Non-Stem Sections')
     ]
     
     edit_handler = TabbedInterface(

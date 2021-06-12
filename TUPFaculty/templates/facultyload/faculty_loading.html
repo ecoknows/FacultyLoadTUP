@@ -93,14 +93,14 @@
           <div style="border: 2px solid #570505; color: #570505;" class='flex-1 px-2'>
             <select id='year' name='schedule' style="width: 100%; background-color: white;" class="focus:outline-none">
               {% for schedule in schedules %}
-                <option value="{{schedule.pk}}">{{schedule}} ( {{schedule.facultyload.all.first.professor}} )</option>
+                <option {% if schedule.facultyload.all.first.professor %}disabled{% endif %} value="{{schedule.pk}}">{{schedule}} ( {{schedule.facultyload.all.first.professor}} )</option>
               {% endfor %}
             </select>
   
           </div>
   
-          <div>
-            <button type="submit"> Submit </button>
+          <div class="py-2">
+            <button class="px-4 text-white bg-primary" style="padding-top: 4px; padding-bottom: 4px;"  type="submit"> Submit </button>
           </div>
         </form>
 
@@ -112,6 +112,7 @@
         style="border-spacing: 10px; border-collapse: separate; color: #555555"
       >
         <tr class="h-4 ">
+          <th class="w-24 text-sm text-center" style="background-color: #e7e7e7">Status</th>
           <th class="px-2 py-2 text-sm text-left" style="background-color: #e7e7e7">Code</th>
           <th class="px-4 py-2 text-sm text-left" style="background-color: #e7e7e7">Description</th>
           <th class="px-4 py-2 text-xs text-left" style="background-color: #e7e7e7">LEC</th>
@@ -123,6 +124,19 @@
         <tbody id='table'>
           {% for data in datas %}
             <tr>
+              <td class="text-xl text-center" style="height: 2.5rem;">
+                {% if data.approved %}
+                <div  class="flex justify-center check" onmouseover='crossHover(this,true);' onmouseout="crossHover(this,false);">
+                  <span class="text-green-700">&#10003;</span>
+                  <h1 class="text-xs text-center text-green-700 uppercase " style="display: none;">Approved</h1>
+                </div>
+                {% else %}
+                <div class="flex justify-center" onmouseover='crossHover(this,true);' onmouseout="crossHover(this,false);">
+                  <span class="text-red-700">&#10005;</span>
+                  <h1 class="text-xs text-center text-red-700 uppercase " style="display: none;">Waiting for approval</h1>
+                </div>
+                {% endif %}
+              </td>
               <td class="text-sm">{{data.schedule.subject.subject_code}}</td>
               <td class="text-sm">{{data.schedule.subject.description}}</td>
               <td class="text-sm">{{data.schedule.lec}}</td>
@@ -134,9 +148,6 @@
           {% endfor %}
         </tbody>
       </table>
-
-
-
     </div>
   </div>
 </section>
@@ -147,6 +158,18 @@
 
 
 <script>
+
+  function crossHover(element, status){
+    if(status){
+      $(element).find('span').css('display', 'none');
+      $(element).find('h1').css('display', 'block');
+    }else{
+      $(element).find('span').css('display', 'block');
+      $(element).find('h1').css('display', 'none');
+    }
+  }
+
+
   $('select').change(()=>{
     $.ajax({
         type: 'GET',

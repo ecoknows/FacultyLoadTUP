@@ -7,7 +7,7 @@ from wagtail.core.models import Page
 from TUPFaculty.base.models import Schedule
 from TUPFaculty.users.models import Professor
 from TUPFaculty.facultyload.models import FacultyLoadModel
-
+from django.contrib.postgres.search import SearchVector
 
 class FacultyLoadPage(Page):
     max_count = 1
@@ -65,7 +65,7 @@ class FacultyLoadingPage(Page):
         submit_schedule = request.POST.get('schedule', None)
         faculty_pk = request.POST.get('faculty_pk', None)
         query_professor = request.GET.get('professor', None)
-        print(faculty_pk, ' sadasdsa')
+        
         if faculty_pk:
             if faculty_pk:
                 year = request.POST.get('year', None)
@@ -108,7 +108,7 @@ class FacultyLoadingPage(Page):
 
                 return TemplateResponse(
                         request, 
-                        'facultyload/faculty_loading_table_body.html',{
+                        'facultyload/department_faculty_loading_table_body.html.html',{
                             'datas' : data
                         }
                     )
@@ -161,12 +161,28 @@ class FacultyLoadingPage(Page):
     
 class DepartmentHeadIndexPage(Page):
     max_count = 1
+    
+    def serve(self,request):
+        
+        return super().serve(request)
 
     def get_context(self, request):
         context = super().get_context(request)
         context['department_head_page'] = self
-        context['query_table'] = Professor.objects.all().filter(is_superuser=False)
+        
+        search_query = request.GET.get('search_query', None)
         context['faculty_load'] = self.get_children().live().type(FacultyLoadPage).first()
+        
+        if search_query:
+            query_result = Professor.objects.annotate(
+                 search=SearchVector('first_name', 'last_name', 'username'),
+            ).filter(search=search_query)
+            context['search_query'] = search_query
+            context['query_table'] = query_result
+            return context
+            
+            
+        context['query_table'] = Professor.objects.all().filter(is_superuser=False)
         return context
 
     class Meta:
