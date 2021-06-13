@@ -18,8 +18,8 @@ class Professor(AbstractUser):
     department_head = models.BooleanField(default=False)
     middle_name = models.CharField(max_length=20, null=True)
     
-    time_in = models.CharField(max_length=50, null=True, blank=True)
-    time_out = models.CharField(max_length=50, null=True, blank=True)
+    time_in = models.DateTimeField(null=True)
+    time_out = models.DateTimeField(null=True)
 
     
     department = models.ForeignKey(

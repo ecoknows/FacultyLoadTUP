@@ -78,7 +78,7 @@
         {% load base_tags %}
         {% for data in datas %}
           {% ifchanged data.schedule.section.course %}
-            <h1 class="text-xl font-bold text-gray-600">{{data.schedule.section.course}}</h1>
+            <h1 class="mt-4 text-xl font-bold text-gray-600">{{data.schedule.section.course}}</h1>
           {% endifchanged %}
           
           {% ifchanged data.schedule.section.year %}

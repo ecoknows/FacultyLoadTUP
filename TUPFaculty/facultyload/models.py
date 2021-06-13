@@ -16,7 +16,7 @@ class FacultyLoadModel(models.Model):
         "users.Professor",
         null=True,
         on_delete=models.SET_NULL,
-        related_name='+',
+        related_name='facultyload',
     )
     
     schedule = models.ForeignKey(
@@ -97,7 +97,8 @@ class FacultyLoad(Page):
         context['datas'] = FacultyLoadModel.objects.filter(
             professor=request.user,
             year=2020,
-            semester='first'
+            semester='first',
+            approved=True,
         ).order_by('schedule__section__name')
 
 

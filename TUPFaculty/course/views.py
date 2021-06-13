@@ -6,12 +6,20 @@ from TUPFaculty import StringResource, ALPHABET
 
 class CourseCreateView(CreateView):
 
-    def create_section(self, instance,section_cnt, str_year, extra=''):
+    def create_section(
+        self,
+        instance,
+        section_cnt,
+        str_year,
+        extra='',
+        non_stem=False
+    ):
         for x in range(section_cnt):
             Section.objects.create(
                 name=instance.abbreviation + '-' + str_year + ALPHABET[x] + extra,
                 course=instance,
-                year=int(str_year)
+                year=int(str_year),
+                non_stem=non_stem
         )
 
     def form_valid(self, form):
@@ -46,28 +54,32 @@ class CourseCreateView(CreateView):
             instance=instance,
             section_cnt=instance.first_year_section_non_stem,
             str_year='1',
-            extra='-NS'
+            extra='-NS',
+            non_stem=True
         )
         
         self.create_section(
             instance=instance,
             section_cnt=instance.second_year_section_non_stem,
             str_year='2',
-            extra='-NS'
+            extra='-NS',
+            non_stem=True
         )
         
         self.create_section(
             instance=instance,
             section_cnt=instance.third_year_section_non_stem,
             str_year='3',
-            extra='-NS'
+            extra='-NS',
+            non_stem=True
         )
         
         self.create_section(
             instance=instance,
             section_cnt=instance.fourth_year_section_non_stem,
             str_year='4',
-            extra='-NS'
+            extra='-NS',
+            non_stem=True
         )
 
 
@@ -80,19 +92,21 @@ class CourseEditView(EditView):
         section_cnt,
         str_year,
         extra='',
+        non_stem=False
     ):
-        filtered_section = Section.objects.filter(course=course, year=int(str_year))
+        filtered_section = Section.objects.filter(course=course, year=int(str_year), non_stem=non_stem)
         current_section_length = len(filtered_section)
 
         if current_section_length > section_cnt:
-            Section.objects.filter(pk__gte=filtered_section[section_cnt].pk, year=int(str_year)).delete()
+            Section.objects.filter(pk__gte=filtered_section[section_cnt].pk, year=int(str_year), non_stem=non_stem).delete()
         elif current_section_length < section_cnt:
             updated_section_length = section_cnt - current_section_length
             for x in range(updated_section_length):
                 Section.objects.create(
                     year=int(str_year),
-                    name=course.abbreviation + '-' + str_year + ALPHABET[x] + extra,
-                    course=course
+                    name=course.abbreviation + '-' + str_year + ALPHABET[current_section_length+x] + extra,
+                    course=course,
+                    non_stem=non_stem
             )
 
     def form_valid(self, form):
@@ -128,25 +142,29 @@ class CourseEditView(EditView):
             course=instance,
             section_cnt=instance.first_year_section_non_stem,
             str_year='1',
-            extra='-NS'
+            extra='-NS',
+            non_stem=True
         )
         self.edit_section(
             course=instance,
             section_cnt=instance.second_year_section_non_stem,
             str_year='2',
-            extra='-NS'
+            extra='-NS',
+            non_stem=True
         )
         self.edit_section(
             course=instance,
             section_cnt=instance.third_year_section_non_stem,
             str_year='3',
-            extra='-NS'
+            extra='-NS',
+            non_stem=True
         )
         self.edit_section(
             course=instance,
             section_cnt=instance.fourth_year_section_non_stem,
             str_year='4',
-            extra='-NS'
+            extra='-NS',
+            non_stem=True
         )
         
 

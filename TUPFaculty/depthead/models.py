@@ -36,18 +36,20 @@ class FacultyLoadPage(Page):
         return super().serve(request)
 
     def get_context(self, request):
-        professor = request.GET.get('professor', None)
-    
+        query_professor = request.GET.get('professor', None)
+        professor = Professor.objects.get(pk=query_professor)
+
         context = super().get_context(request)
         # context['faculty_loading'] = DepartmentHeadIndexPage.objects.child_of(FacultyLoadingPage).first()
-        context['query_professor'] = professor
-        context['professor'] = Professor.objects.get(pk=professor)
+        context['query_professor'] = query_professor
+        context['professor'] = professor
         context['department_head_page'] = True
 
         context['datas'] = FacultyLoadModel.objects.filter(
-            professor=request.user,
+            professor=professor,
             year=2020,
-            semester='first'
+            semester='first',
+            approved=True,
         ).order_by('schedule__section__name')
 
 
@@ -64,8 +66,13 @@ class FacultyLoadingPage(Page):
         content = request.GET.get('content', None)
         submit_schedule = request.POST.get('schedule', None)
         faculty_pk = request.POST.get('faculty_pk', None)
+        remove_pk = request.POST.get('remove_pk', None)
         query_professor = request.GET.get('professor', None)
-        
+
+        if remove_pk:
+            FacultyLoadModel.objects.get(pk=remove_pk).delete()
+            return JsonResponse({'is_approve': True})
+            
         if faculty_pk:
             if faculty_pk:
                 year = request.POST.get('year', None)
@@ -108,7 +115,7 @@ class FacultyLoadingPage(Page):
 
                 return TemplateResponse(
                         request, 
-                        'facultyload/department_faculty_loading_table_body.html.html',{
+                        'facultyload/department_faculty_loading_table_body.html',{
                             'datas' : data
                         }
                     )

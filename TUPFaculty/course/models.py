@@ -23,6 +23,8 @@ class Section(models.Model, index.Indexed):
         on_delete=models.CASCADE,
         related_name='+'
     )
+
+    non_stem = models.BooleanField(default=False)
     
     search_fields = [
         index.SearchField('name'),

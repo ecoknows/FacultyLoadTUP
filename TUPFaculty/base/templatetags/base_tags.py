@@ -13,6 +13,11 @@ def to_year_text(value):
     return year[value-1]
 
 
+@register.filter(name='length_unapproved')
+def length_unapproved(value):
+    return len(value.filter(approved=False))
+
+
 
 @register.inclusion_tag('facultyload/includes/identify_schedule.html', takes_context=True)
 def identify_schedule(context,starting_time,ending_time):

@@ -22,5 +22,13 @@
         <td class="text-sm text-center">{{data.schedule.units}}</td>
         <td class="text-sm">{{data.schedule.section}}</td>
         <td class="text-sm">{{data.schedule}}</td>
+        <td>
+                  
+            <form method='post' class="flex justify-center"">
+              {% csrf_token %} 
+              <button type="button" onmousedown="remove_faculty_loading({{data.pk}});" class="text-xs text-center text-red-700 uppercase " >Remove</button>
+            </form>
+
+          </td>
     </tr>
 {% endfor %}

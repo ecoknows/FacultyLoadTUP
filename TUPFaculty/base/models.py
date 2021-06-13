@@ -20,6 +20,8 @@ from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from TUPFaculty import DAY, TIME
 from django.http import HttpResponseRedirect
+from django.utils import timezone, dateformat
+
 
         
 @register_snippet
@@ -42,10 +44,6 @@ class Schedule(models.Model, index.Indexed):
         choices=TIME,
         default=14
     )
-    
-    lec = models.IntegerField(default=0)
-    lab = models.IntegerField(default=0)
-    units = models.IntegerField(default=0)
 
     subject = models.ForeignKey(
         'Subject',
@@ -64,6 +62,15 @@ class Schedule(models.Model, index.Indexed):
         null=True,
         on_delete=models.CASCADE
     )
+
+    def lec(self):
+        return self.subject.lec
+
+    def lab(self):
+        return self.subject.lab
+
+    def units(self):
+        return self.subject.units
     
 
     panels = [
@@ -77,11 +84,6 @@ class Schedule(models.Model, index.Indexed):
             SnippetChooserPanel('section'),
             SnippetChooserPanel('room'),
         ], 'Assign here'),
-        MultiFieldPanel([
-            FieldPanel('lec'),
-            FieldPanel('lab'),
-            FieldPanel('units'),
-        ], 'Additional info here'),
     ]
     
     
@@ -96,23 +98,35 @@ class Schedule(models.Model, index.Indexed):
     
     
     def __str__(self):
-        return self.section.name + '  | ' +  self.subject.description + ' | ' +  str(self.lec) + ' | ' + str(self.lab) + ' | ' + str(self.units) + ' | ' + self.day + ' - ' +  dict(TIME).get(self.start_time) + ' to ' + dict(TIME).get(self.ending_time) 
+        return self.section.name + '  | ' +  self.subject.description + ' | ' +  str(self.subject.lec) + ' | ' + str(self.subject.lab) + ' | ' + str(self.subject.units) + ' | ' + self.day + ' - ' +  dict(TIME).get(self.start_time) + ' to ' + dict(TIME).get(self.ending_time) 
     
 
 @register_snippet
 class Subject(models.Model, index.Indexed):
     subject_code = models.CharField(max_length=50, null=True)
     description = models.TextField(max_length=150, null=True)
-    course = models.ForeignKey('course.Course', null=True, on_delete=models.CASCADE)
-
-
+    department = models.ForeignKey('course.Department', null=True, on_delete=models.CASCADE)
+    
+    lec = models.IntegerField(null=True)
+    lab = models.IntegerField(null=True)
+    units = models.IntegerField(null=True)
+    
     panels = [
         MultiFieldPanel([
             FieldPanel('subject_code'),
             FieldPanel('description'),
-            FieldPanel('course'),
-        ], heading='Requirements for Subject')
+            FieldPanel('department'),
+        ], heading='Requirements for Subject'),
+        MultiFieldPanel([
+            FieldPanel('lec'),
+            FieldPanel('lab'),
+        ], 'Additional info here'),
     ]
+
+    def save(self):
+        if self.units is None:
+            self.units = self.lab + self.lec
+        super().save()
     
     
     def __str__(self):
@@ -135,13 +149,13 @@ class TimeLoad(Page):
         if time:
             if request.user.time_in and request.user.time_out:
                 request.user.time_out = None
-                request.user.time_in = time
+                request.user.time_in = timezone.now()
                 request.user.save()
             elif request.user.time_in is None:
-                request.user.time_in = time
+                request.user.time_in = timezone.now()
                 request.user.save()
             else:
-                request.user.time_out = time
+                request.user.time_out = timezone.now()
                 request.user.save()
 
             

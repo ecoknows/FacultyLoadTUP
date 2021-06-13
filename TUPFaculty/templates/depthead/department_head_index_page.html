@@ -30,7 +30,9 @@
                         <th class='px-4 text-left' style="background-color: #E7E7E7">Faculty Name</th>
                         <th class='px-4 text-left' style="background-color: #E7E7E7">Time In</th>
                         <th class='px-4 text-left' style="background-color: #E7E7E7">Time Out</th>
+                        <th class='px-4 text-center' style="background-color: #E7E7E7">Number of unapproved schedules</th>
                     </tr>
+                    {% load base_tags %}
                     {% for faculty in query_table %}
                         <tr>
                             <td class='text-center'><a href="{% pageurl faculty_load %}?professor={{faculty.pk}}">{{faculty.prof_code}}</a></td>
@@ -49,6 +51,11 @@
                                     ------
                                 {% endif %}
                             </a></td>
+                            <td class="text-center text-red-600">
+                                <a href="{% pageurl faculty_load %}?professor={{faculty.pk}}">
+                                    {{faculty.facultyload.all | length_unapproved}}
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

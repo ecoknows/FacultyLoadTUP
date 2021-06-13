@@ -31,6 +31,7 @@ class ProfessorAdmin(ModelAdmin):
     menu_icon = 'group'
     list_display = ('prof_code', 'prof_name', 'time_in', 'time_out')
     list_filter = ('department_head',)
+    search_fields = ('prof_code', 'prof_name', 'time_in', 'time_out')
     
     def get_queryset(self, request):
         """
@@ -51,13 +52,38 @@ class FacultyLoadAdmin(ModelAdmin):
     menu_icon = 'form'
     list_display = ('professor', 'schedule','approved')
     list_filter = ('approved',)
+    search_fields = ('professor', 'schedule','approved')
+    
 modeladmin_register(FacultyLoadAdmin)
 
 class ScheduleAdmin(ModelAdmin):
     model = Schedule
     menu_label = 'Schedule'
     menu_icon = 'form'
-    list_display = ('subject', 'section','start_time','ending_time', 'room', 'lab', 'lec', 'units')
+    list_display = (
+        'subject',
+        'section',
+        'start_time',
+        'ending_time',
+        'room',
+        'lab',
+        'lec',
+        'units'
+    )
+    list_filter = (
+        'start_time',
+        'ending_time',
+    )
+    search_fields = (
+        'subject',
+        'section',
+        'start_time',
+        'ending_time',
+        'room',
+        'lab',
+        'lec',
+        'units'
+    )
 modeladmin_register(ScheduleAdmin)
 
 
@@ -69,20 +95,32 @@ class SubjectAdmin(ModelAdmin):
     list_display = (
         'subject_code',
         'description',
-        'course'
+        'department',
+        'lab',
+        'lec',
+        'units'
     )
     list_search = (
         'subject_code',
         'description',
-        'course'
+        'department'
     )
-    list_filter = ('course',)
+    list_filter = ('department',)
+    search_fields = (
+        'subject_code',
+        'description',
+        'department',
+        'lab',
+        'lec',
+        'units'
+    )
     
     
 class RoomAdmin(ModelAdmin):
     model = Room
     menu_label = 'Room'
     menu_icon = 'form'
+    search_fields =('name',)
 
 
 class CourseAdmin(ModelAdmin):
@@ -93,6 +131,7 @@ class CourseAdmin(ModelAdmin):
     menu_icon = 'form'
     
     list_display = ('name', 'abbreviation')
+    search_fields = ('name', 'abbreviation')
 
 class CollegeAdmin(ModelAdmin):
     model = College
@@ -105,6 +144,9 @@ class DepartmentAdmin(ModelAdmin):
     menu_label = 'Department'
     menu_icon = 'form'
     menu_order = 100
+    list_display = ('name', 'college')
+    list_filter = ('college',)
+    search_fields = ('name', 'college')
 
 class DataGroup(ModelAdminGroup):
     menu_label = 'Data'

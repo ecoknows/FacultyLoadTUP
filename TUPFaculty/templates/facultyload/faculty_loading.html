@@ -66,7 +66,7 @@
       </div>
 
       <div class="pl-2">
-        <h1 class="font-sans text-3xl font-bold text-gray-600">
+        <h1 class="font-sans text-3xl font-bold text-gray-600 uppercase">
           {{request.user.last_name}},  {{request.user.first_name}}
         </h1>
         <h2 class="font-sans text-xl text-gray-600">{{request.user.username}}</h2>
@@ -139,9 +139,9 @@
               </td>
               <td class="text-sm">{{data.schedule.subject.subject_code}}</td>
               <td class="text-sm">{{data.schedule.subject.description}}</td>
-              <td class="text-sm">{{data.schedule.lec}}</td>
-              <td class="text-sm">{{data.schedule.lab}}</td>
-              <td class="text-sm">{{data.schedule.units}}</td>
+              <td class="text-sm">{{data.schedule.subject.lec}}</td>
+              <td class="text-sm">{{data.schedule.subject.lab}}</td>
+              <td class="text-sm">{{data.schedule.subject.units}}</td>
               <td class="text-sm">{{data.schedule.section}}</td>
               <td class="text-sm">{{data.schedule}}</td>
             </tr>

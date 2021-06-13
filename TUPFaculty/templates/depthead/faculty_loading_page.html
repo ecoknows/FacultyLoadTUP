@@ -73,12 +73,13 @@
 
       <div class="px-2">
         <div class="mb-2 ">
-          <form id='search-form' class="flex space-x-2" >
+          <form  id='search-form' class="flex space-x-2" >
             <div style="
                     border: 1px solid #570505; 
                     padding: 6px;
                     font-size: 17px;
             ">
+              <input type="text" class='hidden' name="professor" value="{{professor.pk}}">
               <input id='search-bar' type="text" placeholder="Search.." name="search" {% if search %}value="{{search}}"{% endif %}>
             </div>
             <div class="flex items-center" style="border: 1px solid #570505; color: #570505; ">
@@ -120,6 +121,7 @@
           <th class="px-4 py-2 text-xs text-left" style="background-color: #e7e7e7">UNITS</th>
           <th class="px-4 py-2 text-sm text-left" style="background-color: #e7e7e7">Sections</th>
           <th class="px-4 py-2 text-sm text-left" style="background-color: #e7e7e7">Schedule</th>
+          <th class="px-4 py-2 text-sm text-left" style="background-color: #e7e7e7">Remove</th>
         </tr>
 
           <tbody  id='table' > 
@@ -144,11 +146,19 @@
                 </td>
                 <td class="text-sm">{{data.schedule.subject.subject_code}}</td>
                 <td class="text-sm">{{data.schedule.subject.description}}</td>
-                <td class="text-sm text-center">{{data.schedule.lec}}</td>
-                <td class="text-sm text-center">{{data.schedule.lab}}</td>
-                <td class="text-sm text-center">{{data.schedule.units}}</td>
+                <td class="text-sm text-center">{{data.schedule.subject.lec}}</td>
+                <td class="text-sm text-center">{{data.schedule.subject.lab}}</td>
+                <td class="text-sm text-center">{{data.schedule.subject.units}}</td>
                 <td class="text-sm">{{data.schedule.section}}</td>
                 <td class="text-sm">{{data.schedule}}</td>
+                <td>
+                  
+                  <form method='post' class="flex justify-center"">
+                    {% csrf_token %} 
+                    <button type="button" onmousedown="remove_faculty_loading({{data.pk}});" class="text-xs text-center text-red-700 uppercase " >Remove</button>
+                  </form>
+
+                </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -167,6 +177,48 @@
 
 
 <script>
+  function remove_faculty_loading(prof_pk){
+    
+    $.ajax({
+        type: 'POST',
+        data: {
+          remove_pk: prof_pk,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function (response) {
+
+          if(response?.is_approve){
+              $.ajax({
+                  type: 'GET',
+                  data: {
+                    content: 'table',
+                    year: $('#year').val(),
+                    sem:  $('#sem').val(),
+                  },
+                  success: function (response) {
+                    $('#table').html(response)
+                  },
+              })
+              
+              $.ajax({
+                  type: 'GET',
+                  data: {
+                    content: 'schedule',
+                    year: $('#year').val(),
+                    sem:  $('#sem').val(),
+                  },
+                  success: function (response) {
+                    $('#schedule').html(response)
+                  },
+              })
+
+            
+          }
+          
+        },
+    })
+  }
+  
   function crossHover(element, status){
     if(status){
       $(element).find('span').css('display', 'none');
@@ -258,6 +310,7 @@
           $('#schedule').html(response)
         },
     })
+
   })
 
 
