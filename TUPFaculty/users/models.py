@@ -35,8 +35,6 @@ class Professor(AbstractUser):
             FieldPanel('last_name'),
             FieldPanel('department'),
             FieldPanel('department_head'),
-            FieldPanel('time_in'),
-            FieldPanel('time_out'),
         ], heading='Faculty Information'),
     ]
     
